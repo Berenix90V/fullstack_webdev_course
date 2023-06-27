@@ -4,8 +4,6 @@ const App = () => {
         { name: 'Peter', age: 24 },
         { name: 'Maya', age:25 }
     ]
-    const name = 'Peter'
-    const age = 24
     return (
         <>
             <h1>Greetings</h1>
