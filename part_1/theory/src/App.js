@@ -1,13 +1,12 @@
 import {useState} from 'react'
-const App = (props) => {
-    const [counter, setCounter] = useState(0)
-    setTimeout(()=>setCounter(counter+1), 1000)
-
-    console.log('rendering...', counter)
+const App = () => {
+    const handleClick = ()=>{
+        console.log('clicked')
+    }
 
     return (
         <div>
-            <p>{counter}</p>
+            <button onClick={handleClick}>plus</button>
         </div>
     )
 }
