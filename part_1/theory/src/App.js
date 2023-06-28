@@ -1,6 +1,5 @@
 
-const Hello =(props) => {
-    const {name, age} = props
+const Hello =({name, age}) => {
     const bornYear = () => new Date().getFullYear()-age
 
     return(
