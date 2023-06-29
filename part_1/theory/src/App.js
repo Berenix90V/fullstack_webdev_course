@@ -4,16 +4,19 @@ const App = () => {
     const [leftClick, setLefClick] = useState(0)
     const [rightClick, setRightClick] = useState(0)
     const [allClicks, setAll] = useState([])
+    const [total, setTotal] = useState(0)
     const handleLeftClick = () => {
-        allClicks.push('L')
-        setAll(allClicks)
-        setLefClick(leftClick+1)
+        setAll(allClicks.concat('L'))
+        const updateLeft = leftClick+1
+        setLefClick(updateLeft)
+        setTotal(updateLeft+rightClick)
     }
 
     const handleRightClick = () => {
-        allClicks.push('R')
-        setAll(allClicks)
-        setRightClick(rightClick+1)
+        setAll(allClicks.concat('R'))
+        const updateRight = rightClick+1
+        setRightClick(updateRight)
+        setTotal(leftClick+updateRight)
     }
 
     return(
@@ -22,7 +25,8 @@ const App = () => {
             <button onClick={handleLeftClick}>left</button>
             <button onClick={handleRightClick}>right</button>
             {rightClick}
-            <p>{allClicks.join(' ')}</p>
+            <p>Click sequence: {allClicks.join(' ')}</p>
+            <p>Total: {total}</p>
         </div>
     )
 }
