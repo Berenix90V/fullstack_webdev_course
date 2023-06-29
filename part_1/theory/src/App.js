@@ -5,12 +5,14 @@ const App = () => {
     const [rightClick, setRightClick] = useState(0)
     const [allClicks, setAll] = useState([])
     const handleLeftClick = () => {
-        setAll(allClicks.concat('L'))
+        allClicks.push('L')
+        setAll(allClicks)
         setLefClick(leftClick+1)
     }
 
     const handleRightClick = () => {
-        setAll(allClicks.concat('R'))
+        allClicks.push('R')
+        setAll(allClicks)
         setRightClick(rightClick+1)
     }
 
