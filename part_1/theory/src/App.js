@@ -9,16 +9,16 @@ const Button = ({handleClick, text}) => {
 }
 const App = () => {
     const [value, setValue] = useState(10)
-    const setToValue = (newValue)=>()=>{
+    const setToValue = (newValue)=>{
         console.log('Value now', newValue)
         setValue(newValue)
     }
     return(
         <div>
             {value}
-            <Button handleClick={setToValue(1000)} text={1000} />
-            <Button handleClick={setToValue(0)} text={'reset'} />
-            <Button handleClick={setToValue(value+1)} text={'plus'} />
+            <Button handleClick={()=>setToValue(1000)} text={1000} />
+            <Button handleClick={()=>setToValue(0)} text={'reset'} />
+            <Button handleClick={()=>setToValue(value+1)} text={'plus'} />
         </div>
 
     )
