@@ -7,6 +7,8 @@ const Button = ({handleClick, text}) => {
         </button>
     )
 }
+
+const Display = (props) => <div>{props.value}</div>
 const App = () => {
     const [value, setValue] = useState(10)
     const setToValue = (newValue)=>{
@@ -15,7 +17,7 @@ const App = () => {
     }
     return(
         <div>
-            {value}
+            <Display value={value} />
             <Button handleClick={()=>setToValue(1000)} text={1000} />
             <Button handleClick={()=>setToValue(0)} text={'reset'} />
             <Button handleClick={()=>setToValue(value+1)} text={'plus'} />
