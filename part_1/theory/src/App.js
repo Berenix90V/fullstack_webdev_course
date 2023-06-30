@@ -1,5 +1,12 @@
 import {useState} from 'react'
 
+const Button = ({handleClick, text}) => {
+    return(
+        <button onClick={handleClick}>
+            {text}
+        </button>
+    )
+}
 const App = () => {
     const [value, setValue] = useState(10)
     const setToValue = (newValue)=>()=>{
@@ -9,9 +16,9 @@ const App = () => {
     return(
         <div>
             {value}
-            <button onClick={setToValue(1000)} >1000</button>
-            <button onClick={setToValue(0)} >reset</button>
-            <button onClick={setToValue(value+1)} >plus</button>
+            <Button handleClick={setToValue(1000)} text={1000} />
+            <Button handleClick={setToValue(0)} text={'reset'} />
+            <Button handleClick={setToValue(value+1)} text={'plus'} />
         </div>
 
     )
