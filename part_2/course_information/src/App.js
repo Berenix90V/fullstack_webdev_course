@@ -64,4 +64,8 @@ const App = () => {
   );
 }
 
+/*
+exercise 2.3 require reduce, but already done with that
+ */
+
 export default App;
