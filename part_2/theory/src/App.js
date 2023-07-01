@@ -4,8 +4,8 @@ const App = (props) => {
      <div>
        <h1>Notes</h1>
        <ul>
-           {notes.map((note)=>
-               <li key={note.id}>
+           {notes.map((note, i)=>
+               <li key={i}>
                    {note.content}
                </li>)
            }
@@ -13,5 +13,12 @@ const App = (props) => {
      </div>
   );
 }
+
+/*
+case uses for index as key in map:
+1. the list and items are static–they are not computed and do not change;
+2. the items in the list have no ids;
+3. the list is never reordered or filtered.
+ */
 
 export default App;
