@@ -8,17 +8,25 @@ const Statistics = ({good, neutral, bad})=>{
     const total = good+neutral+bad
     const average = total === 0? 0 : (good-bad)/total
     const positive = total === 0? 0: good*100/total
-    return(
-        <>
-            <Title text='Statistics' />
-            <DisplaySingleStat text='good' value={good} />
-            <DisplaySingleStat text='neutral' value={neutral} />
-            <DisplaySingleStat text='bad' value={bad} />
-            <DisplaySingleStat text='all' value={total} />
-            <DisplaySingleStat text='average' value={average} />
-            <DisplaySingleStat text='positive' value={positive.toString()+' %'} />
-        </>
-    )
+    if(total===0)
+        return(
+            <>
+                <Title text='Statistics' />
+                <p>No feedback given</p>
+            </>
+        )
+    else
+        return(
+            <>
+                <Title text='Statistics' />
+                <DisplaySingleStat text='good' value={good} />
+                <DisplaySingleStat text='neutral' value={neutral} />
+                <DisplaySingleStat text='bad' value={bad} />
+                <DisplaySingleStat text='all' value={total} />
+                <DisplaySingleStat text='average' value={average} />
+                <DisplaySingleStat text='positive' value={positive.toString()+' %'} />
+            </>
+        )
 
 }
 function App() {
