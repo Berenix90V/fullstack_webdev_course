@@ -17,7 +17,6 @@ function App() {
   const handleVotes =()=>{
     const newVotes = [...votes]
     newVotes[selected] += 1
-    console.log(newVotes[selected])
     setVotes(newVotes)
   }
 
@@ -29,17 +28,22 @@ function App() {
    */
   function getRandomInt(min, max){
     max=max+1
-    const randomInt = Math.floor(Math.random()*(max-min)+min)
-    return randomInt
+    return Math.floor(Math.random()*(max-min)+min)
+
   }
   return (
     <>
       <div>
+        <h1>Anecdote of the day</h1>
         <p>{anecdotes[selected]}</p>
         <p>Has {votes[selected]} votes</p>
       </div>
       <Button handleClick={()=>handleVotes()} text='Vote'/>
       <Button handleClick={()=>setSelected(getRandomInt(0, anecdotes.length-1))} text='Next anecdote'></Button>
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
+      </div>
     </>
   );
 }
