@@ -11,8 +11,8 @@ const App = () => {
     useEffect(() => {
         noteServices
             .getAll()
-            .then(response => {
-                setNotes(response.data)
+            .then(initialNotes => {
+                setNotes(initialNotes)
             })
     }, [])
     const handleNoteChange = (event) => {
@@ -27,8 +27,8 @@ const App = () => {
         }
         noteServices
             .create(noteObject)
-            .then((response)=>{
-                setNotes(notes.concat(response.data))
+            .then((createdNote)=>{
+                setNotes(notes.concat(createdNote))
                 setNewNote('')
             })
     }
@@ -37,7 +37,7 @@ const App = () => {
         const changedNote = {...note, important: !note.important}
         noteServices
             .update(id, changedNote)
-            .then(response => setNotes(notes.map(n=>n.id!==id?n:response.data)))
+            .then(updatedNote => setNotes(notes.map(n=>n.id!==id?n:updatedNote)))
     }
     return (
         <div>
