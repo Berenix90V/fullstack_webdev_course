@@ -38,6 +38,10 @@ const App = () => {
         noteServices
             .update(id, changedNote)
             .then(updatedNote => setNotes(notes.map(n=>n.id!==id?n:updatedNote)))
+            .catch(error =>{
+                alert(`the note '${note.content}' was already deleted from the server`)
+                setNotes(notes.filter(n=>n.id!==id))
+            })
     }
     return (
         <div>
