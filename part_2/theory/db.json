@@ -19,6 +19,11 @@
       "content": "Post is used to create new resources",
       "important": false,
       "id": 4
+    },
+    {
+      "content": "New note",
+      "important": true,
+      "id": 5
     }
   ]
 }
