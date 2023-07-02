@@ -9,16 +9,12 @@ const App = () => {
     const notesToShow = showAll? notes : notes.filter((note)=>note.important)
 
     useEffect(() => {
-        console.log('effect')
         axios
             .get('http://localhost:3001/notes')
             .then(response => {
-                console.log('promise fulfilled')
                 setNotes(response.data)
             })
-        console.log('test')
     }, [])
-    console.log('render', notes.length, 'notes')
     const handleNoteChange = (event) => {
         setNewNote(event.target.value)
     }
@@ -29,8 +25,13 @@ const App = () => {
             important: Math.random()<0.5,
             id: notes.length+1
         }
-        setNotes(notes.concat(noteObject))
-        setNewNote('')
+        axios
+            .post("http://localhost:3001/notes", noteObject)
+            .then((response)=>{
+                console.log(response)
+                setNotes(notes.concat(noteObject))
+                setNewNote('')
+            })
     }
     return (
         <div>
