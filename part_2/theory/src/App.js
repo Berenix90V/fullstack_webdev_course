@@ -20,17 +20,19 @@ const App = (props) => {
         setNewNote('')
     }
     return (
-         <div>
+        <div>
             <h1>Notes</h1>
+            <button onClick={()=>setShowAll(!showAll)}>
+                show {showAll? 'important': 'all'}
+            </button>
             <ul>
-               {notesToShow.map((note)=> <Note key={note.id} note={note}/>)}
+                {notesToShow.map((note)=> <Note key={note.id} note={note}/>)}
             </ul>
             <form onSubmit={addNote}>
                 <input value={newNote} onChange={handleNoteChange}/>
                 <button type="submit">save</button>
             </form>
-
-         </div>
+        </div>
     );
 }
 
