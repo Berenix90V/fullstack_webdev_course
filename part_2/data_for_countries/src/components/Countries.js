@@ -1,10 +1,22 @@
+import {useState} from "react";
+
 const Country = ({country}) => {
-    return(
-        <p>{country.name.common}</p>
-    )
+    const [show, setShow] = useState(false)
+    if(show)
+        return(
+            <>
+                <p>{country.name.common} <button onClick={()=>setShow(!show)}>hide</button></p>
+                <CountryDetails country={country} />
+            </>
+            
+        )
+    else
+        return(
+            <p>{country.name.common} <button onClick={()=>setShow(!show)}>show</button></p>
+        )
 }
 
-const SingleCountry = ({country}) => {
+const CountryDetails = ({country}) => {
     const languages = Object.values(country.languages)
     return(
         <>
@@ -27,7 +39,7 @@ const Countries = ({countries, filter}) => {
     else{
         if(countries.length===1){
             return(
-                <SingleCountry country={countries[0]} />
+                <CountryDetails country={countries[0]} />
             )
         } else {
             return (
