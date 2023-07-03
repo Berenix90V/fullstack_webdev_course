@@ -45,6 +45,15 @@ const App = () => {
                     .then(updatedPerson=>{
                         setPersons(persons.map(p=>p.id!==updatedPerson.id? p : updatedPerson))
                     })
+                    .catch(error=>{
+                        setNotificationMessage(`Information about ${newPerson.name} has already been removed from server`)
+                        setNotificationType('error')
+                        setPersons(persons.filter(p=>p.id!==newPerson.id))
+                        setTimeout(()=>{
+                            setNotificationMessage(null)
+                            setNotificationType(null)
+                        }, 5000)
+                    })
             }
         }
         else{
