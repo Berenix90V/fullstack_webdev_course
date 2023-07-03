@@ -13,7 +13,14 @@ const create = (personObject) => {
         .then(response => response.data)
 }
 
+const deletePerson = (id) => {
+    return axios
+        .delete(`${baseUrl}/${id}`)
+        .then(response=>response.data)
+}
+
 export default {
     getAll: getAll,
-    create: create
+    create: create,
+    deletePerson: deletePerson
 }
