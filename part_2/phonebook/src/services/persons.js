@@ -10,17 +10,24 @@ const getAll = ()=> {
 const create = (personObject) => {
     return axios
         .post(baseUrl, personObject)
-        .then(response => response.data)
+        .then(response=> response.data)
 }
 
 const deletePerson = (id) => {
     return axios
         .delete(`${baseUrl}/${id}`)
-        .then(response=>response.data)
+        .then(response=> response.data)
+}
+
+const update = (id, personObject) => {
+    return axios
+        .put(`${baseUrl}/${id}`, personObject)
+        .then(response=> response.data)
 }
 
 export default {
     getAll: getAll,
     create: create,
-    deletePerson: deletePerson
+    deletePerson: deletePerson,
+    update: update
 }
