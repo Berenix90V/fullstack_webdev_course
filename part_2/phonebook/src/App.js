@@ -3,12 +3,15 @@ import Form from "./components/Form";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 import personsServices from "./services/persons"
+import Notification from "./components/Notification";
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+    const [notificationMessage, setNotificationMessage] = useState(null)
+    const [notificationType, setNotificationType] = useState(null)
     const personsToShow = filter ===''? persons : persons.filter(
         (person)=>person.name.toLowerCase().includes(filter.toLowerCase())
     )
@@ -53,6 +56,12 @@ const App = () => {
                 .create(personObject)
                 .then(createdPerson=>{
                     setPersons(persons.concat(createdPerson))
+                    setNotificationMessage(`Added ${createdPerson.name}`)
+                    setNotificationType('new_item')
+                    setTimeout(()=>{
+                        setNotificationMessage(null)
+                        setNotificationType(null)
+                    }, 5000)
                     setNewName('')
                     setNewNumber('')
                 })
@@ -72,6 +81,7 @@ const App = () => {
     return (
     <div className="App">
         <h2>Phonebook</h2>
+        <Notification message={notificationMessage} notificationType={notificationType} />
         <Filter filter={{changeHandler: handleFilterChange, value: filter}} />
         <h3>Add new</h3>
         <Form name={{changeHandler: handleNameChange, value: newName}}
