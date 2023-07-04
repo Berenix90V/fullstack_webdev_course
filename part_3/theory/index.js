@@ -1,4 +1,4 @@
-const http = require('http')
+import http from 'http'
 
 const app = http.createServer((request, response) => {
     response.writeHead(200,{'Content-Type': 'text/plain'})
