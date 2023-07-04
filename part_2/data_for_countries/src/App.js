@@ -3,11 +3,10 @@ import {useEffect, useState} from "react";
 import Countries from './components/Countries'
 
 
-function App() {
+const App = () => {
     const [filter, setFilter] = useState('')
     const [countries, setCountries] = useState([])
     let filteredCountries = filter===''? [] : countries.filter(c=>c.name.common.toLowerCase().includes(filter.toLowerCase()))
-
 
     useEffect(()=>{
         countriesServices

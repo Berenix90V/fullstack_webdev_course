@@ -5,4 +5,6 @@ const getAll = ()=>{
         .get(`${baseUrl}/all`)
         .then(response=>response.data)
 }
-export default {getAll}
+
+const countriesServices = {getAll}
+export default countriesServices
