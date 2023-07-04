@@ -10,7 +10,6 @@ const Weather = ({country}) => {
             .getWeather(capital, countryAbbreviation.toLowerCase())
             .then(response => setWeatherObj(response))
     }, [capital, countryAbbreviation])
-    console.log(weatherObj)
     if(weatherObj){
         const weatherIcon = weatherObj.weather[0].icon
         const iconUrl = `https://openweathermap.org/img/wn/${weatherIcon}@2x.png`
