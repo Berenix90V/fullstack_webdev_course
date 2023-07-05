@@ -33,8 +33,11 @@ app.get('/api/notes/:id', (request, response) => {
     const note = notes.find(note=>note.id===id)
     if(note)
         response.json(note)
-    else
+    else{
+        response.statusMessage = "Note not found";
         response.status(404).end()
+    }
+
 })
 
 const PORT = 3001
