@@ -1,29 +1,7 @@
 import 'dotenv/config'
+import Note from "./models/note.js";
 import express from 'express'
 import cors from 'cors'
-import mongoose from 'mongoose'
-
-const password = process.env.MONGO_PASSWORD
-const url = `mongodb+srv://fullstack:${password}@cluster0.93p0nk3.mongodb.net/noteApp?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery', false)
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
-    content: String,
-    important: Boolean
-})
-
-noteSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-} )
-
-const Note = mongoose.model('Note', noteSchema)
-
 
 const app = express()
 
