@@ -46,9 +46,15 @@ It can be installed with npm:
       internal_port = 3000
     ```
    If you have the last one, change it to:
-    ```
-    [http_service]
-          internal_port = 8080
+    ``` 
+   [env]
+       PORT = "8080" # add this
+   
+   [experimental]
+       auto_rollback = true # add this
+
+   [http_service]
+       internal_port = 8080
     ```
 5. Deploy and open the app:
     ```
