@@ -116,3 +116,9 @@ To solve this problem it is enough to add the following declaration to the `pack
     }
     ```
     After a restart, the React development environment will work as a proxy. If the React code does an HTTP request to a server address at http://localhost:3000 not managed by the React application itself (i.e. when requests are not about fetching the CSS or JavaScript of the application), the request will be redirected to the server at http://localhost:3001.
+
+To set env variables on fly:
+```
+fly secrets set DATABASE_URL=postgres://example.com/mydb 
+```
+for more info: https://fly.io/docs/reference/secrets/
