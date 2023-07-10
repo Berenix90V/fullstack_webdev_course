@@ -53,14 +53,11 @@ app.get('/api/notes', (request, response) => {
 })
 
 app.get('/api/notes/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const note = notes.find(note=>note.id===id)
-    if(note)
-        response.json(note)
-    else{
-        response.statusMessage = "Note not found";
-        response.status(404).end()
-    }
+    const noteID = request.params.id
+    Note.findById(noteID)
+        .then(note=>{
+            response.json(note)
+    })
 })
 
 app.delete('/api/notes/:id', (request, response)=>{
