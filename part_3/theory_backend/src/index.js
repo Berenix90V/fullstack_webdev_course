@@ -5,11 +5,13 @@ import Note from "./models/note.js";
 
 const app = express()
 
-// Middleware
-app.use(cors())
-app.use(express.static('build'))
-
-
+// defne functions for middleware
+const errorHandler = (error, request, response, next) =>{
+    if(error.name === "CastError"){
+        response.status(400).send({error: 'malformatted id'})
+    }
+    next(error)
+}
 
 const requestLogger = (request, response, next)=>{
     console.log('Method: ', request.method)
@@ -19,8 +21,16 @@ const requestLogger = (request, response, next)=>{
     next()
 }
 
+const unknownEndPoint = (request, response) => {
+    response.status(404).send({error:'unknown endpoint'})
+}
+
+// Middleware
+app.use(cors())
+app.use(express.static('build'))
 app.use(express.json())
 app.use(requestLogger)
+
 
 let notes = [
     {
@@ -52,7 +62,7 @@ app.get('/api/notes', (request, response) => {
 
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
     const noteID = request.params.id
     Note.findById(noteID)
         .then(note=>{
@@ -62,10 +72,7 @@ app.get('/api/notes/:id', (request, response) => {
                 response.status(404).end()
             }
         })
-        .catch(error =>{
-            console.log(error)
-            response.status(400).send({error: 'malformatted id'})
-        })
+        .catch(error =>next(error))
 })
 
 app.delete('/api/notes/:id', (request, response)=>{
@@ -74,12 +81,6 @@ app.delete('/api/notes/:id', (request, response)=>{
     response.status(204).end()
 })
 
-const generateID = () =>{
-    const maxID = notes.length > 0?
-        Math.max(...notes.map(n=>n.id))
-        : 0
-    return maxID+1
-}
 app.post('/api/notes/', (request, response) => {
     const body = request.body
     if(body.content === undefined)
@@ -93,11 +94,9 @@ app.post('/api/notes/', (request, response) => {
     })
 })
 
-const unknownEndPoint = (request, response) => {
-    response.status(404).send({error:'unknown endpoint'})
-}
-
 app.use(unknownEndPoint)
+app.use(errorHandler)
+
 
 const PORT = process.env.PORT
 app.listen(PORT)
