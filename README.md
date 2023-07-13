@@ -1,4 +1,8 @@
 # fullstack_webdev_course
+## Notes about Middleware
+Middleware functions have to be taken into use before routes if we want them to be executed before the route event handlers are called. 
+There are also situations where we want to define middleware functions after routes. 
+In practice, this means that we are defining middleware functions that are only called if no route handles the HTTP request.
 ## Notes about deployment
 1. install cors on the backend to make it possible to connect from a different origin.
 It can be installed with npm:
