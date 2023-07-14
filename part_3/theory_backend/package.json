@@ -2,10 +2,10 @@
   "name": "theory",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../theory_frontend && pnpm run build && @powershell Copy-Item build -Recurse ../theory_backend",
     "deploy": "fly deploy",
