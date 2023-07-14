@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 mongoose.set('strictQuery', false)
 
@@ -6,7 +6,7 @@ const url = process.env.MONGO_URL
 console.log('connecting to', url)
 
 mongoose.connect(url)
-    .then(result=>{
+    .then(result => {
         console.log('Connected to MongoDB')
     })
     .catch((error) => {
@@ -23,7 +23,7 @@ const noteSchema = new mongoose.Schema({
 })
 
 noteSchema.set('toJSON', {
-    transform: (document, returnedObject) =>{
+    transform: (document, returnedObject) => {
         returnedObject.id = document._id.toString()
         delete returnedObject._id
         delete returnedObject.__v

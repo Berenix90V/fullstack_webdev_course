@@ -1,19 +1,21 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import Note from "./models/note.js";
+import Note from './models/note.js'
 
 const app = express()
 
-// defne functions for middleware
-const errorHandler = (error, request, response, next) =>{
-    if(error.name === "CastError"){
-        response.status(400).send({error: 'malformatted id'})
+// def functions for middleware
+const errorHandler = (error, request, response, next) => {
+    if (error.name === 'CastError') {
+        response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        response.status(400).json({ error: error.message })
     }
     next(error)
 }
 
-const requestLogger = (request, response, next)=>{
+const requestLogger = (request, response, next) => {
     console.log('Method: ', request.method)
     console.log('Path: ', request.path)
     console.log('Body: ', request.body)
@@ -22,7 +24,7 @@ const requestLogger = (request, response, next)=>{
 }
 
 const unknownEndPoint = (request, response) => {
-    response.status(404).send({error:'unknown endpoint'})
+    response.status(404).send({ error: 'unknown endpoint' })
 }
 
 // Middleware
@@ -31,13 +33,12 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(requestLogger)
 
-
 app.get('/', (request, response) => {
     response.send('<h1>Hello World</h1>')
 })
 
 app.get('/api/notes', (request, response) => {
-    Note.find({}).then(notes=>{
+    Note.find({}).then(notes => {
         response.json(notes)
     })
 })
@@ -45,40 +46,44 @@ app.get('/api/notes', (request, response) => {
 app.get('/api/notes/:id', (request, response, next) => {
     const noteID = request.params.id
     Note.findById(noteID)
-        .then(note=>{
-            if(note){
+        .then(note => {
+            if (note) {
                 response.json(note)
-            } else{
+            } else {
                 response.status(404).end()
             }
         })
-        .catch(error =>next(error))
+        .catch(error => next(error))
 })
 
-app.delete('/api/notes/:id', (request, response, next)=>{
+app.delete('/api/notes/:id', (request, response, next) => {
     const noteID = request.params.id
     Note.findByIdAndRemove(noteID)
-        .then(deletedNote=>{
-            if(deletedNote)
+        .then(deletedNote => {
+            if (deletedNote) {
                 response.status(204).end()
-            else
+            } else {
                 response.status(404).end()
+            }
         })
-        .catch(error=>next(error))
-
+        .catch(error => next(error))
 })
 
-app.post('/api/notes/', (request, response) => {
+app.post('/api/notes/', (request, response, next) => {
     const body = request.body
-    if(body.content === undefined)
-        return response.status(400).json({ error: 'content missing'})
+    console.log(body)
+    if (body.content === undefined) {
+        return response.status(400).json({ error: 'content missing' })
+    }
     const note = new Note({
         content: body.content,
-        important: body.important || false,
+        important: body.important || false
     })
-    note.save().then(savedNote => {
-        response.json(savedNote)
-    })
+    note.save()
+        .then(savedNote => {
+            response.json(savedNote)
+        })
+        .catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
@@ -88,7 +93,7 @@ app.put('/api/notes/:id', (request, response, next) => {
         content: body.content,
         important: body.important
     }
-    Note.findByIdAndUpdate(noteID, note, {new:true})
+    Note.findByIdAndUpdate(noteID, note, { runValidators: true, new: true, context: 'query' })
         .then(updatedNote => {
             response.json(updatedNote)
         })
@@ -97,7 +102,6 @@ app.put('/api/notes/:id', (request, response, next) => {
 
 app.use(unknownEndPoint)
 app.use(errorHandler)
-
 
 const PORT = process.env.PORT
 app.listen(PORT)
