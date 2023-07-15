@@ -10,7 +10,6 @@ mongoose.connect(config.mongodb_url)
 
 app.use(cors())
 app.use(express.json())
-
 app.use('/api/blogs', blogsRouter)
 
 export default app
