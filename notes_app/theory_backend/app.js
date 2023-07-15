@@ -103,6 +103,6 @@ app.put('/api/notes/:id', (request, response, next) => {
 app.use(unknownEndPoint)
 app.use(errorHandler)
 
-const PORT = process.env.PORT
-app.listen(PORT)
-console.log(`Server listening on the port ${PORT}`)
+
+
+export default app
