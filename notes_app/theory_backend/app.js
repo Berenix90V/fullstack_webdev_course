@@ -1,9 +1,24 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import Note from './models/note.js'
+import notesRouter from "./controllers/notes.js";
+import mongoose from "mongoose";
+import config from './utils/config'
 
 const app = express()
+
+mongoose.set('strictQuery', false)
+
+console.log('connecting to', config.MONGODB_URL)
+
+mongoose.connect(config.MONGODB_URL)
+    .then(result => {
+        console.log('Connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('Error connecting to Mongo', error.message)
+    })
+
 
 // def functions for middleware
 const errorHandler = (error, request, response, next) => {
@@ -33,76 +48,12 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(requestLogger)
 
+app.use('/api/notes', notesRouter)
 app.get('/', (request, response) => {
     response.send('<h1>Hello World</h1>')
 })
 
-app.get('/api/notes', (request, response) => {
-    Note.find({}).then(notes => {
-        response.json(notes)
-    })
-})
-
-app.get('/api/notes/:id', (request, response, next) => {
-    const noteID = request.params.id
-    Note.findById(noteID)
-        .then(note => {
-            if (note) {
-                response.json(note)
-            } else {
-                response.status(404).end()
-            }
-        })
-        .catch(error => next(error))
-})
-
-app.delete('/api/notes/:id', (request, response, next) => {
-    const noteID = request.params.id
-    Note.findByIdAndRemove(noteID)
-        .then(deletedNote => {
-            if (deletedNote) {
-                response.status(204).end()
-            } else {
-                response.status(404).end()
-            }
-        })
-        .catch(error => next(error))
-})
-
-app.post('/api/notes/', (request, response, next) => {
-    const body = request.body
-    console.log(body)
-    if (body.content === undefined) {
-        return response.status(400).json({ error: 'content missing' })
-    }
-    const note = new Note({
-        content: body.content,
-        important: body.important || false
-    })
-    note.save()
-        .then(savedNote => {
-            response.json(savedNote)
-        })
-        .catch(error => next(error))
-})
-
-app.put('/api/notes/:id', (request, response, next) => {
-    const noteID = request.params.id
-    const body = request.body
-    const note = {
-        content: body.content,
-        important: body.important
-    }
-    Note.findByIdAndUpdate(noteID, note, { runValidators: true, new: true, context: 'query' })
-        .then(updatedNote => {
-            response.json(updatedNote)
-        })
-        .catch(error => next(error))
-})
-
 app.use(unknownEndPoint)
 app.use(errorHandler)
-
-
 
 export default app

@@ -66,4 +66,4 @@ notesRouter.put('/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-export default notesRouter()
+export default notesRouter
