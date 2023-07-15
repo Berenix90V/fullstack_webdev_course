@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import notesRouter from './controllers/notes.js';
-import mongoose from "mongoose";
+import notesRouter from './controllers/notes.js'
+import mongoose from 'mongoose'
 import config from './utils/config.js'
 import logger from './utils/logger.js'
 import middleware from './utils/middleware.js'
@@ -20,7 +20,6 @@ mongoose.connect(config.mongodb_url)
     .catch((error) => {
         logger.info('Error connecting to Mongo', error.message)
     })
-
 
 // Middleware
 app.use(cors())

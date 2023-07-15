@@ -15,5 +15,5 @@ const average = (array) => {
 
 module.exports = {
     reverse,
-    average,
+    average
 }

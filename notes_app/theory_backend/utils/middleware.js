@@ -1,4 +1,4 @@
-import logger from "./logger.js";
+import logger from './logger.js'
 const errorHandler = (error, request, response, next) => {
     logger.error(error.message)
     if (error.name === 'CastError') {

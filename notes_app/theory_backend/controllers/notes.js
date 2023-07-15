@@ -1,5 +1,5 @@
 import express from 'express'
-import Note from "../models/note.js";
+import Note from '../models/note.js'
 
 const notesRouter = express.Router()
 
@@ -49,8 +49,6 @@ notesRouter.delete('/:id', (request, response, next) => {
         })
         .catch(error => next(error))
 })
-
-
 
 notesRouter.put('/:id', (request, response, next) => {
     const noteID = request.params.id
