@@ -9,7 +9,7 @@ test('reverse of a', () => {
 test('reverse of react', () => {
     const result = reverse('react')
 
-    expect(result).toBe('tcaer')
+    expect(result).toBe('tkaer')
 })
 
 test('reverse of releveler', () => {
