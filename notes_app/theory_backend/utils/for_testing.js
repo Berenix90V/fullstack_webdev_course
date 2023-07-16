@@ -1,11 +1,11 @@
-const reverse = (string) => {
+export const reverse = (string) => {
     return string
         .split('')
         .reverse()
         .join('')
 }
 
-const average = (array) => {
+export const average = (array) => {
     const reducer = (sum, item) => {
         return sum + item
     }
@@ -13,7 +13,8 @@ const average = (array) => {
     return array.length === 0? 0: array.reduce(reducer, 0) / array.length
 }
 
-module.exports = {
+const for_testing = {
     reverse,
     average
 }
+export default for_testing
