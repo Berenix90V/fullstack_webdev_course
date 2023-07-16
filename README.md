@@ -126,3 +126,18 @@ To set env variables on fly:
 fly secrets set DATABASE_URL=postgres://example.com/mydb 
 ```
 for more info: https://fly.io/docs/reference/secrets/
+
+## Notes about ESM and jest
+How to enable ESM on jest: https://jestjs.io/docs/ecmascript-modules
+1. install cross-env
+   ```
+   pnpm install cross-env
+   ```
+2. Create file `jets.config.js` and insert:
+   ```javascript
+   export default { transform: {} }
+   ```
+3. Edit test script in `package.json` as follows:
+   ```json
+   "test": "cross-env NODE_OPTIONS=--experimental-vm-modules pnpx jest"
+   ```
