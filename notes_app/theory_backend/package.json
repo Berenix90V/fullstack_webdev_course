@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest --verbose",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=develpment nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../theory_frontend && pnpm run build && @powershell Copy-Item build -Recurse ../theory_backend",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
