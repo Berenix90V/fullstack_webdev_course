@@ -103,3 +103,37 @@ describe('favorite blogs', () => {
         expect(list_helper.favoriteBlog([])).toBe(null)
     })
 });
+
+describe('mostBlogs', () => {
+    test('of an empty list', () => {
+        const authorWithMostBlogs = {
+            author:undefined,
+            blogs: undefined
+        }
+        expect(list_helper.mostBlogs([])).toEqual(authorWithMostBlogs)
+    })
+    test('of a list with a single blog', () => {
+        const authorWithMostBlogs = {
+            author: listWithOneBlog[0].author,
+            blogs: 1
+        }
+        expect(list_helper.mostBlogs(listWithOneBlog)).toEqual(authorWithMostBlogs)
+    })
+    test('of a list with more blogs', () => {
+        const authorWithMostBlogs = {
+            author: "Robert C. Martin",
+            blogs: 3
+        }
+        expect(list_helper.mostBlogs(listWithMoreBlogs)).toEqual(authorWithMostBlogs)
+    })
+    test('of a list with more blogs and 2 top authors', () => {
+        const listWithTwoTopAuthors = [...listWithMoreBlogs]
+        listWithTwoTopAuthors.pop()
+        console.log(listWithTwoTopAuthors)
+        const authorWithMostBlogs = {
+            author: "Edsger W. Dijkstra",
+            blogs: 2
+        }
+        expect(list_helper.mostBlogs(listWithTwoTopAuthors)).toEqual(authorWithMostBlogs)
+    })
+})

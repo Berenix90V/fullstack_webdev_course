@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const dummy = (blogs) => {
     return 1
 }
@@ -26,9 +28,20 @@ const favoriteBlog = (blogs) => {
 
 }
 
+const mostBlogs = (blogs) => {
+    const blogsByAuthor = _.countBy(blogs, (blog) => blog.author)
+    const maxBlogs = _.max(_.values(blogsByAuthor))
+    const authorWithMostBlogs = _.findKey(blogsByAuthor, (el) => el === maxBlogs)
+    return {
+        author: authorWithMostBlogs,
+        blogs: maxBlogs
+    }
+}
+
 const list_helper = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
 export default list_helper
