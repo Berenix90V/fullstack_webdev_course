@@ -38,10 +38,28 @@ const mostBlogs = (blogs) => {
     }
 }
 
+const mostLikes = (blogs) => {
+    const blogsByAuthor = _.groupBy(blogs, blog => blog.author)
+    const mapLikes = {}
+    const sumLikes = (accumulator, blog) => {
+        return accumulator+blog.likes
+    }
+    _.forEach(blogsByAuthor, (value, key) => {
+        mapLikes[key] = value.reduce(sumLikes, 0)
+    })
+    const maxLikes = _.max(_.values(mapLikes))
+    const authorWithMostLikes = _.findKey(mapLikes, (el) => el===maxLikes)
+    return {
+        author: authorWithMostLikes,
+        likes: maxLikes
+    }
+}
+
 const list_helper = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
 export default list_helper

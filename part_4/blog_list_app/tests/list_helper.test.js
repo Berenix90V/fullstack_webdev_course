@@ -104,7 +104,7 @@ describe('favorite blogs', () => {
     })
 });
 
-describe('mostBlogs', () => {
+describe('Author with most blogs', () => {
     test('of an empty list', () => {
         const authorWithMostBlogs = {
             author:undefined,
@@ -129,7 +129,6 @@ describe('mostBlogs', () => {
     test('of a list with more blogs and 2 top authors', () => {
         const listWithTwoTopAuthors = [...listWithMoreBlogs]
         listWithTwoTopAuthors.pop()
-        console.log(listWithTwoTopAuthors)
         const authorWithMostBlogs = {
             author: "Edsger W. Dijkstra",
             blogs: 2
@@ -137,3 +136,27 @@ describe('mostBlogs', () => {
         expect(list_helper.mostBlogs(listWithTwoTopAuthors)).toEqual(authorWithMostBlogs)
     })
 })
+
+describe('author with most likes', function () {
+    test('in an empty list', () => {
+        const authorWithMostLikes = {
+            author: undefined,
+            likes: undefined
+        }
+        expect(list_helper.mostLikes([])).toEqual(authorWithMostLikes)
+    })
+    test('in a list with a single blog', () => {
+        const authorWithMostLikes = {
+            author: listWithOneBlog[0].author,
+            likes: listWithOneBlog[0].likes
+        }
+        expect(list_helper.mostLikes(listWithOneBlog)).toEqual(authorWithMostLikes)
+    })
+    test('in a list of more blogs', () => {
+        const authorWithMostLikes = {
+            author: "Edsger W. Dijkstra",
+            likes: 17
+        }
+        expect(list_helper.mostLikes(listWithMoreBlogs)).toEqual(authorWithMostLikes)
+    })
+});
