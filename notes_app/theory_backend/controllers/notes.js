@@ -21,20 +21,15 @@ notesRouter.get('/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-notesRouter.post('/', (request, response, next) => {
+notesRouter.post('/', async (request, response, next) => {
     const body = request.body
-    if (body.content === undefined) {
-        return response.status(400).json({ error: 'content missing' })
-    }
+
     const note = new Note({
         content: body.content,
         important: body.important || false
     })
-    note.save()
-        .then(savedNote => {
-            response.status(201).json(savedNote)
-        })
-        .catch(error => next(error))
+    const savedNote = await note.save()
+    response.status(201).json(savedNote)
 })
 notesRouter.delete('/:id', (request, response, next) => {
     const noteID = request.params.id
