@@ -56,9 +56,23 @@ const blogsInDb = async () => {
     return blogs.map(blog => blog.toJSON())
 }
 
+const idNotExisting = async () => {
+    const blog = {
+        title: "title",
+        author: "author",
+        url: "url",
+        likes: 9
+    }
+    const blogObject = new Blog(blog)
+    await blogObject.save()
+    await blogObject.deleteOne()
+    return blogObject._id.toString()
+}
+
 const helper={
     initialBlogs,
-    blogsInDb
+    blogsInDb,
+    idNotExisting
 }
 
 export default helper

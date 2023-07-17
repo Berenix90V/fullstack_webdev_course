@@ -98,7 +98,7 @@ describe('creation of a blog', () => {
     })
 })
 
-describe('deletion of a note', () => {
+describe('deletion of a blog', () => {
     test('succeeds with status code 204', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
@@ -109,6 +109,53 @@ describe('deletion of a note', () => {
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
         const blogsIds = blogsAtEnd.map(b => b.id)
         expect(blogsIds).not.toContain(blogToDelete.id)
+    })
+})
+
+describe('update of a blog', () => {
+    test('succeeds with status code 200 if id is valid', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+        const newBlog = {
+            title: blogToUpdate.title,
+            author: blogToUpdate.author,
+            url: blogToUpdate.url,
+            likes: blogToUpdate.likes + 1
+        }
+         await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+        const updatedBlogInDb = await Blog.findById(blogToUpdate.id)
+        expect(updatedBlogInDb).toBe(expect.objectContaining(newBlog))
+    })
+    test('fails with status code 404 if id is not existent', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+        const newBlog = {
+            title: blogToUpdate.title,
+            author: blogToUpdate.author,
+            url: blogToUpdate.url,
+            likes: blogToUpdate.likes + 1
+        }
+        const blogIdNotExisting = await helper.idNotExisting()
+        await api
+            .put(`/api/blogs/${blogIdNotExisting}`)
+            .expect(404)
+    })
+    test('fails with status code 404 if id is not existent', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+        const newBlog = {
+            title: blogToUpdate.title,
+            author: blogToUpdate.author,
+            url: blogToUpdate.url,
+            likes: blogToUpdate.likes + 1
+        }
+        const blogIdNotValid = '12344'
+        await api
+            .put(`/api/blogs/${blogIdNotValid}`)
+            .expect(404)
     })
 })
 
