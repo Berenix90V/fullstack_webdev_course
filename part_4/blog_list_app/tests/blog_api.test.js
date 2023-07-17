@@ -57,6 +57,21 @@ test('it is possible to add a blog', async ()=> {
     expect(savedBlog).toEqual(expect.objectContaining(newBlog))
 })
 
+test('default value for likes is 0', async () => {
+    const newBlog = {
+        title: "New React patterns",
+        author: "Michael Chen",
+        url: "https://reactpatterns.com/",
+    }
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    const savedBlog = response.body
+    expect(savedBlog.likes).toBe(0)
+})
+
 afterAll(async()=>{
     await mongoose.connection.close()
 })
