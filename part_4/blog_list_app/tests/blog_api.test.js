@@ -124,10 +124,11 @@ describe('update of a blog', () => {
         }
          await api
             .put(`/api/blogs/${blogToUpdate.id}`)
+             .send(newBlog)
             .expect(200)
             .expect('Content-Type', /application\/json/)
         const updatedBlogInDb = await Blog.findById(blogToUpdate.id)
-        expect(updatedBlogInDb).toBe(expect.objectContaining(newBlog))
+        expect(updatedBlogInDb).toEqual(expect.objectContaining(newBlog))
     })
     test('fails with status code 404 if id is not existent', async () => {
         const blogsAtStart = await helper.blogsInDb()
@@ -141,9 +142,10 @@ describe('update of a blog', () => {
         const blogIdNotExisting = await helper.idNotExisting()
         await api
             .put(`/api/blogs/${blogIdNotExisting}`)
+            .send(newBlog)
             .expect(404)
     })
-    test('fails with status code 404 if id is not existent', async () => {
+    test('fails with status code 400 if id is not existent', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToUpdate = blogsAtStart[0]
         const newBlog = {
@@ -155,7 +157,8 @@ describe('update of a blog', () => {
         const blogIdNotValid = '12344'
         await api
             .put(`/api/blogs/${blogIdNotValid}`)
-            .expect(404)
+            .send(newBlog)
+            .expect(400)
     })
 })
 
