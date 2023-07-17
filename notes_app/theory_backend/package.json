@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=develpment nodemon index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --verbose --runInBand",
     "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../theory_frontend && pnpm run build && @powershell Copy-Item build -Recurse ../theory_backend",
     "deploy": "fly deploy",
