@@ -43,14 +43,18 @@ test('it is possible to add a blog', async ()=> {
         title: "New React patterns",
         author: "Michael Chen",
         url: "https://reactpatterns.com/",
-        likes: 10,
+        likes: 10
     }
-    const newBlogObject = new Blog(newBlog)
-    await api
+    const response = await api
         .post('/api/blogs')
+        .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
-
+    const blogsAtTheEnd = await helper.blogsInDb()
+    expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length+1)
+    const savedBlogID = response.body.id
+    const savedBlog = blogsAtTheEnd.find(blog => blog.id.toString() === savedBlogID)
+    expect(savedBlog).toEqual(expect.objectContaining(newBlog))
 })
 
 afterAll(async()=>{

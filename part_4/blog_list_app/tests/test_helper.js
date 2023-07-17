@@ -1,3 +1,4 @@
+import Blog from '../models/blog.js'
 
 const initialBlogs = [
     {
@@ -50,8 +51,14 @@ const initialBlogs = [
     }
 ]
 
+const blogsInDb = async () => {
+    const blogs = await Blog.find({})
+    return blogs.map(blog => blog.toJSON())
+}
+
 const helper={
-    initialBlogs
+    initialBlogs,
+    blogsInDb
 }
 
 export default helper
