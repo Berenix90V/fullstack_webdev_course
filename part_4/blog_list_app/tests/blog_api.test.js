@@ -72,6 +72,30 @@ test('default value for likes is 0', async () => {
     expect(savedBlog.likes).toBe(0)
 })
 
+test('not valid blog is not added (url missing)', async () => {
+    const newBlog = {
+        title: "New React patterns",
+        author: "Michael Chen",
+        likes: 12
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
+test('not valid blog is not added (title missing)', async () => {
+    const newBlog = {
+        author: "Michael Chen",
+        url: "https://reactpatterns.com/",
+        likes: 12
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
 afterAll(async()=>{
     await mongoose.connection.close()
 })
