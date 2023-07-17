@@ -38,6 +38,21 @@ test('verify existence of unique property id', async () => {
 
 })
 
+test('it is possible to add a blog', async ()=> {
+    const newBlog = {
+        title: "New React patterns",
+        author: "Michael Chen",
+        url: "https://reactpatterns.com/",
+        likes: 10,
+    }
+    const newBlogObject = new Blog(newBlog)
+    await api
+        .post('/api/blogs')
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+})
+
 afterAll(async()=>{
     await mongoose.connection.close()
 })
