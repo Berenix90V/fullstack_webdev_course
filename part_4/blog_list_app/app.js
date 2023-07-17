@@ -1,9 +1,11 @@
 import config from './utils/config.js'
 import express from 'express'
+import 'express-async-errors'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import blogsRouter from './controllers/blogs.js'
 import middleware from './utils/middleware.js'
+import blogsRouter from './controllers/blogs.js'
+
 
 const app = express()
 
