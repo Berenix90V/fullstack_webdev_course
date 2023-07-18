@@ -1,7 +1,12 @@
 import mongoose from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
 
 const userSchema = new mongoose.Schema({
-    username: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: String,
     passwordhash: String,
     notes:[{
@@ -10,6 +15,7 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+userSchema.plugin(uniqueValidator)
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()

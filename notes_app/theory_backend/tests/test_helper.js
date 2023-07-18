@@ -1,4 +1,5 @@
 import Note from '../models/note.js'
+import User from "../models/user.js";
 
 const initialNotes = [
     {
@@ -23,10 +24,16 @@ const notesInDb = async () => {
     return notes.map(n=>n.toJSON())
 }
 
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(u=>u.toJSON())
+}
+
 const helper = {
     initialNotes,
     notExistingId,
-    notesInDb
+    notesInDb,
+    usersInDb
 }
 
 export default helper
