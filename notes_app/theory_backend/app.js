@@ -4,6 +4,7 @@ import 'express-async-errors'
 import cors from 'cors'
 import notesRouter from './controllers/notes.js'
 import userRouter from './controllers/users.js'
+import loginRouter from './controllers/login.js'
 import mongoose from 'mongoose'
 import config from './utils/config.js'
 import logger from './utils/logger.js'
@@ -31,6 +32,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/notes', notesRouter)
 app.use('/api/users', userRouter)
+app.use('/api/login', loginRouter)
 app.get('/', (request, response) => {
     response.send('<h1>Hello World</h1>')
 })
