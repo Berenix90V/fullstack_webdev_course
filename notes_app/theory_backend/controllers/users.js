@@ -4,6 +4,11 @@ import User from '../models/user.js'
 
 const userRouter = express.Router()
 
+userRouter.get('/', async (request, response) => {
+    const users = await User.find({})
+    response.json(users)
+})
+
 userRouter.post('/', async (request, response) => {
     const {username, name, password} = request.body
     const saltRounds = 10
