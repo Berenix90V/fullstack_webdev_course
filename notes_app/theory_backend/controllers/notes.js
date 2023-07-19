@@ -1,12 +1,12 @@
+import jsonwebtoken from 'jsonwebtoken'
 import express from 'express'
 import Note from '../models/note.js'
 import User from '../models/user.js'
-import jsonwebtoken from 'jsonwebtoken'
 
 const getTokenFrom = request => {
-    const authorization = request.get('authorization')
+    const authorization = request.get('Authorization')
     if(authorization && authorization.startsWith('Bearer')){
-        return authorization.replace('Bearer', '')
+        return authorization.replace('Bearer ', '')
     }
     return null
 }
@@ -31,7 +31,7 @@ notesRouter.get('/:id', async (request, response) => {
 notesRouter.post('/', async (request, response) => {
     const body = request.body
 
-    const decodeToken = jsonwebtoken.verify(getTokenFrom(request, process.env.SECRET))
+    const decodeToken = jsonwebtoken.verify(getTokenFrom(request),process.env.SECRET)
     if(!decodeToken.id){
         response.status(401).json({error:'token invalid'})
     }
