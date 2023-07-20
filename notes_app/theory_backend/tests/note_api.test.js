@@ -60,13 +60,28 @@ describe('viewing a specific note', () => {
 })
 
 describe('addition of a new note', () => {
-    test('succeeds with valid data', async() => {
+    it('succeeds with valid data', async() => {
+        const users = await helper.usersInDb()
+        const validUser = users[0]
+
+        const loginUser = {
+            username: validUser.username,
+            password: "sekret"
+        }
+        const response = await api
+            .post('/api/login')
+            .send(loginUser)
+            .expect(200)
+        const token = response.body.token
+
         const newNote = {
             content: 'async/await simplifies making async calls',
             important: true,
+            userId: validUser._id
         }
         await api
             .post('/api/notes')
+            .set({"Authorization": "Bearer "+token})
             .send(newNote)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -78,7 +93,7 @@ describe('addition of a new note', () => {
         expect(contents).toContain(newNote.content)
     })
 
-    test('fails with status code 400 if data invalid', async () => {
+    it('fails with status code 400 if data invalid', async () => {
         const newNote = {
             important: true
         }

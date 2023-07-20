@@ -30,6 +30,7 @@ notesRouter.get('/:id', async (request, response) => {
 
 notesRouter.post('/', async (request, response) => {
     const body = request.body
+    console.log(request.get('Authorization'))
 
     const decodeToken = jsonwebtoken.verify(getTokenFrom(request),process.env.SECRET)
     if(!decodeToken.id){
