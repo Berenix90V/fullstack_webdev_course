@@ -35,6 +35,32 @@ describe('Creation of a user', () => {
         expect(savedUser.username).toEqual(newUser.username)
         expect(savedUser.name).toEqual(newUser.name)
     })
+    test('fails with invalid user', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: "ab",
+            password: "salainen"
+        }
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+    test('fails with invalid password', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: "mluukkai",
+            password: "sa"
+        }
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
 })
 
 describe('View all users', () => {

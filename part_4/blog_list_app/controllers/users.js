@@ -6,7 +6,13 @@ const usersRouter = express.Router()
 
 usersRouter.post('/', async (request, response) => {
     const body = request.body
-    const passwordHash = await bcrypt.hash(body.password, 10)
+
+    const password = body.password
+    if(!password || password.length<3){
+        response.status(400).send({error: 'invalid password'})
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10)
     const newUser = new User({
         username: body.username,
         name: body.name,
