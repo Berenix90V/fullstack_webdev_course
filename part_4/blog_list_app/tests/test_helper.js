@@ -83,12 +83,18 @@ const usersInDb = async () => {
     return users.map(user=>user.toJSON())
 }
 
+const blogCreator = async () => {
+    const users = await usersInDb()
+    return users[0]
+}
+
 const helper={
     initialBlogs,
     initialUsers,
     blogsInDb,
     idNotExisting,
-    usersInDb
+    usersInDb,
+    blogCreator
 }
 
 export default helper

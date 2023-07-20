@@ -40,11 +40,13 @@ describe('view all blogs', () => {
 
 describe('creation of a blog', () => {
     test('it is possible to add a blog', async ()=> {
+        const creator = await helper.blogCreator()
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
-            likes: 10
+            likes: 10,
+            userId: creator.id
         }
         const response = await api
             .post('/api/blogs')
@@ -55,14 +57,23 @@ describe('creation of a blog', () => {
         expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length+1)
         const savedBlogID = response.body.id
         const savedBlog = blogsAtTheEnd.find(blog => blog.id.toString() === savedBlogID)
-        expect(savedBlog).toEqual(expect.objectContaining(newBlog))
+        expect(savedBlog).toEqual(expect.objectContaining({
+            title: newBlog.title,
+            author: newBlog.author,
+            url: newBlog.url,
+            likes: newBlog.likes
+        }))
+        const savedCreatorId = savedBlog.user.toString()
+        expect(savedCreatorId).toBe(creator.id)
     })
 
     test('default value for likes is 0', async () => {
+        const creator = await helper.blogCreator()
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
+            userId: creator.id
         }
         const response = await api
             .post('/api/blogs')
@@ -74,10 +85,12 @@ describe('creation of a blog', () => {
     })
 
     test('not valid blog is not added (url missing)', async () => {
+        const creator = await helper.blogCreator()
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
-            likes: 12
+            likes: 12,
+            userId: creator.id
         }
         await api
             .post('/api/blogs')
@@ -86,10 +99,12 @@ describe('creation of a blog', () => {
     })
 
     test('not valid blog is not added (title missing)', async () => {
+        const creator = await helper.blogCreator()
         const newBlog = {
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
-            likes: 12
+            likes: 12,
+            userId: creator.id
         }
         await api
             .post('/api/blogs')
