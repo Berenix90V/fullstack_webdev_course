@@ -1,4 +1,5 @@
 import Blog from '../models/blog.js'
+import User from "../models/user.js";
 
 const initialBlogs = [
     {
@@ -51,6 +52,14 @@ const initialBlogs = [
     }
 ]
 
+const initialUsers = [
+    {
+        username: "root",
+        name: "Superuser",
+        password: "password"
+    }
+]
+
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
@@ -69,10 +78,17 @@ const idNotExisting = async () => {
     return blogObject._id.toString()
 }
 
+const usersInDb = async () => {
+    const users =  await User.find({})
+    return users.map(user=>user.toJSON())
+}
+
 const helper={
     initialBlogs,
+    initialUsers,
     blogsInDb,
-    idNotExisting
+    idNotExisting,
+    usersInDb
 }
 
 export default helper
