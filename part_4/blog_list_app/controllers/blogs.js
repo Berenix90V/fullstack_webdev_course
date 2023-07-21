@@ -3,15 +3,6 @@ import Blog from "../models/blog.js";
 import User from "../models/user.js";
 import jsonwebtoken from "jsonwebtoken";
 
-const getTokenFrom =(request) => {
-    const authorization = request.get('Authorization')
-    if(authorization && authorization.startsWith('Bearer ')) {
-        return authorization.replace('Bearer ', '')
-    } else {
-        return null
-    }
-}
-
 const blogsRouter = express.Router()
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', {username: 1, name: 1})
@@ -20,8 +11,7 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
-
-    const token = getTokenFrom(request)
+    const token = request.token
     const decodedToken = jsonwebtoken.verify(token, process.env.SECRET)
     if(!decodedToken.id){
         return response.status(401).json({error: 'invalid token'})
