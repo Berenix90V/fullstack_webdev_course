@@ -52,8 +52,7 @@ describe('creation of a blog', () => {
             title: "New React patterns",
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
-            likes: 10,
-            userId: creator.id
+            likes: 10
         }
         const response = await api
             .post('/api/blogs')
@@ -75,17 +74,19 @@ describe('creation of a blog', () => {
         expect(savedCreatorId).toBe(creator.id)
     })
 
-    test('it is possible to add a blog', async ()=> {
+    test('fails with invalid token', async ()=> {
         const creator = await helper.blogCreator()
-        const validToken = 'abc'
+        const creatorToAuthenticate = {
+            username: creator.username,
+        }
+        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
             likes: 10,
-            userId: creator.id
         }
-        const response = await api
+        await api
             .post('/api/blogs')
             .set({'Authorization': 'Bearer '+validToken})
             .send(newBlog)
@@ -95,8 +96,31 @@ describe('creation of a blog', () => {
         expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length)
     })
 
+    test('fails with invalid token', async ()=> {
+        const validToken = 'abc'
+        const newBlog = {
+            title: "New React patterns",
+            author: "Michael Chen",
+            url: "https://reactpatterns.com/",
+            likes: 10,
+        }
+        await api
+            .post('/api/blogs')
+            .set({'Authorization': 'Bearer '+validToken})
+            .send(newBlog)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        const blogsAtTheEnd = await helper.blogsInDb()
+        expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length)
+    })
+
     test('default value for likes is 0', async () => {
         const creator = await helper.blogCreator()
+        const creatorToAuthenticate = {
+            username: creator.username,
+            id: creator.id
+        }
+        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
@@ -105,6 +129,7 @@ describe('creation of a blog', () => {
         }
         const response = await api
             .post('/api/blogs')
+            .set({'Authorization': 'Bearer '+validToken})
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
