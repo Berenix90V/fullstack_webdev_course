@@ -4,12 +4,19 @@ import mongoose from 'mongoose'
 import Blog from '../models/blog.js'
 import helper from './test_helper.js'
 import _ from "lodash";
-import jsonwebtoken from "jsonwebtoken";
+import jsonwebtoken from 'jsonwebtoken'
+import User from '../models/user.js'
 
 
 const api = supertest(app)
 
 beforeEach(async() => {
+    await User.deleteMany({})
+    for(const user of helper.initialUsers) {
+        await api
+            .post('/api/users')
+            .send(user)
+    }
     await Blog.deleteMany({})
     const initialBlogs = await helper.getInitialBlogsWithCreator()
     for(const blog of initialBlogs){
