@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import Blog from '../models/blog.js'
 import helper from './test_helper.js'
 import _ from "lodash";
+import jsonwebtoken from "jsonwebtoken";
 
 
 const api = supertest(app)
@@ -42,6 +43,11 @@ describe('view all blogs', () => {
 describe('creation of a blog', () => {
     test('it is possible to add a blog', async ()=> {
         const creator = await helper.blogCreator()
+        const creatorToAuthenticate = {
+            username: creator.username,
+            id: creator.id
+        }
+        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
@@ -51,6 +57,7 @@ describe('creation of a blog', () => {
         }
         const response = await api
             .post('/api/blogs')
+            .set({'Authorization': 'Bearer '+validToken})
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -66,6 +73,26 @@ describe('creation of a blog', () => {
         }))
         const savedCreatorId = savedBlog.user.toString()
         expect(savedCreatorId).toBe(creator.id)
+    })
+
+    test('it is possible to add a blog', async ()=> {
+        const creator = await helper.blogCreator()
+        const validToken = 'abc'
+        const newBlog = {
+            title: "New React patterns",
+            author: "Michael Chen",
+            url: "https://reactpatterns.com/",
+            likes: 10,
+            userId: creator.id
+        }
+        const response = await api
+            .post('/api/blogs')
+            .set({'Authorization': 'Bearer '+validToken})
+            .send(newBlog)
+            .expect(401)
+            .expect('Content-Type', /application\/json/)
+        const blogsAtTheEnd = await helper.blogsInDb()
+        expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length)
     })
 
     test('default value for likes is 0', async () => {
