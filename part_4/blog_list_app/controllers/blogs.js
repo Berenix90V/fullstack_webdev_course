@@ -12,7 +12,6 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
     const currentUserId = request.user
-    const decodedToken = jsonwebtoken.verify(token, process.env.SECRET)
     if(!currentUserId){
         return response.status(401).json({error: 'invalid token'})
     }

@@ -15,8 +15,11 @@ const userExtractor = (request, response, next) => {
     const authorization = request.get('Authorization')
     if(authorization && authorization.startsWith('Bearer ')) {
         const token = authorization.replace('Bearer ', '')
-        const decodedToken = jsonwebtoken.decode(token, process.env.SECRET)
-        request.user = decodedToken.id.toString()
+        const decodedToken = jsonwebtoken.verify(token, process.env.SECRET)
+        if(!decodedToken.id){
+            return response.status(401).json({ error: 'token invalid' })
+        }
+        request.user = decodedToken.id
     }
     next()
 }
