@@ -1,3 +1,4 @@
+import jsonwebtoken from "jsonwebtoken";
 
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
@@ -10,18 +11,19 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
-const tokenExtractor = (request, response, next) => {
+const userExtractor = (request, response, next) => {
     const authorization = request.get('Authorization')
     if(authorization && authorization.startsWith('Bearer ')) {
         const token = authorization.replace('Bearer ', '')
-        request.token = token
+        const decodedToken = jsonwebtoken.decode(token, process.env.SECRET)
+        request.user = decodedToken.id.toString()
     }
     next()
 }
 
 const middleware = {
     errorHandler,
-    tokenExtractor
+    userExtractor
 }
 
 export default middleware
