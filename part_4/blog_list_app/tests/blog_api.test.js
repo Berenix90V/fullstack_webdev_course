@@ -27,7 +27,7 @@ beforeEach(async() => {
 
 describe('view all blogs', () => {
     test('blogs are returned as json', async () => {
-        const response = await api
+        await api
             .get('/api/blogs')
             .expect(200)
             .expect('Content-Type', /application\/json/)
@@ -176,7 +176,7 @@ describe('deletion of a blog', () => {
     test('succeeds with status code 204 if deleted by the creator', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
-        const creator = await helper.blogCreator()
+        const creator = await User.findById(blogToDelete.user)
         const creatorToAuthenticate = {
             username: creator.username,
             id: creator._id
@@ -206,10 +206,9 @@ describe('deletion of a blog', () => {
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
     })
-    test('fails with status code 401 if not valid token', async () => {
+    test('fails with status code 400 if not valid token', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
-        const creator = await helper.blogCreator()
         const validToken = 'abc'
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
@@ -272,7 +271,6 @@ describe('update of a blog', () => {
             .expect(400)
     })
 })
-
 
 afterAll(async()=>{
     await mongoose.connection.close()
