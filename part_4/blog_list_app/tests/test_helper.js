@@ -1,6 +1,16 @@
 import Blog from '../models/blog.js'
 import User from "../models/user.js";
 
+
+
+const initialUsers = [
+    {
+        username: "root",
+        name: "Superuser",
+        password: "password"
+    }
+]
+
 const initialBlogs = [
     {
         _id: "5a422a851b54a676234d17f7",
@@ -52,20 +62,12 @@ const initialBlogs = [
     }
 ]
 
-const initialUsers = [
-    {
-        username: "root",
-        name: "Superuser",
-        password: "password"
-    }
-]
-
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
 
-const idNotExisting = async () => {
+const blogIdNotExisting = async () => {
     const blog = {
         title: "title",
         author: "author",
@@ -88,13 +90,22 @@ const blogCreator = async () => {
     return users[0]
 }
 
+const getInitialBlogsWithCreator = async () => {
+    const creator = await blogCreator()
+    for(const blog of initialBlogs){
+        blog['user'] = creator.id
+    }
+    return initialBlogs
+}
+
 const helper={
     initialBlogs,
     initialUsers,
     blogsInDb,
-    idNotExisting,
+    blogIdNotExisting,
     usersInDb,
-    blogCreator
+    blogCreator,
+    getInitialBlogsWithCreator
 }
 
 export default helper

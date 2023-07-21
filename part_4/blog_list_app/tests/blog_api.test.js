@@ -10,7 +10,8 @@ const api = supertest(app)
 
 beforeEach(async() => {
     await Blog.deleteMany({})
-    for(const blog of helper.initialBlogs){
+    const initialBlogs = await helper.getInitialBlogsWithCreator()
+    for(const blog of initialBlogs){
         const blogObject = new Blog(blog)
         await blogObject.save()
     }
@@ -18,7 +19,7 @@ beforeEach(async() => {
 
 describe('view all blogs', () => {
     test('blogs are returned as json', async () => {
-        await api
+        const response = await api
             .get('/api/blogs')
             .expect(200)
             .expect('Content-Type', /application\/json/)
@@ -135,7 +136,8 @@ describe('update of a blog', () => {
             title: blogToUpdate.title,
             author: blogToUpdate.author,
             url: blogToUpdate.url,
-            likes: blogToUpdate.likes + 1
+            likes: blogToUpdate.likes + 1,
+            user: blogToUpdate.user
         }
          await api
             .put(`/api/blogs/${blogToUpdate.id}`)
@@ -152,9 +154,10 @@ describe('update of a blog', () => {
             title: blogToUpdate.title,
             author: blogToUpdate.author,
             url: blogToUpdate.url,
-            likes: blogToUpdate.likes + 1
+            likes: blogToUpdate.likes + 1,
+            user: blogToUpdate.user
         }
-        const blogIdNotExisting = await helper.idNotExisting()
+        const blogIdNotExisting = await helper.blogIdNotExisting()
         await api
             .put(`/api/blogs/${blogIdNotExisting}`)
             .send(newBlog)
@@ -167,7 +170,8 @@ describe('update of a blog', () => {
             title: blogToUpdate.title,
             author: blogToUpdate.author,
             url: blogToUpdate.url,
-            likes: blogToUpdate.likes + 1
+            likes: blogToUpdate.likes + 1,
+            user: blogToUpdate.user
         }
         const blogIdNotValid = '12344'
         await api
