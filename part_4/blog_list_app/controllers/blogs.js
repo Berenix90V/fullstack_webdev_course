@@ -1,6 +1,16 @@
 import express from 'express'
 import Blog from "../models/blog.js";
 import User from "../models/user.js";
+import jsonwebtoken from "jsonwebtoken";
+
+const getTokenFrom =(request) => {
+    const authorization = request.get('Authorization')
+    if(authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '')
+    } else {
+        return null
+    }
+}
 
 const blogsRouter = express.Router()
 blogsRouter.get('/', async (request, response) => {
@@ -10,7 +20,14 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
-    const user = await User.findById(body.userId)
+
+    const token = getTokenFrom(request)
+    const decodedToken = jsonwebtoken.verify(token, process.env.SECRET)
+    if(!decodedToken.id){
+        return response.status(401).json({error: 'invalid token'})
+    }
+    const user = await User.findById(decodedToken.id)
+
     const blog = new Blog({
         title: body.title,
         author: body.author,
