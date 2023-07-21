@@ -39,7 +39,6 @@ describe('view all blogs', () => {
     })
 })
 
-
 describe('creation of a blog', () => {
     test('it is possible to add a blog', async ()=> {
         const creator = await helper.blogCreator()
@@ -96,7 +95,7 @@ describe('creation of a blog', () => {
         expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length)
     })
 
-    test('fails with invalid token', async ()=> {
+    test('fails with invalid token format', async ()=> {
         const validToken = 'abc'
         const newBlog = {
             title: "New React patterns",

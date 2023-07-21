@@ -14,7 +14,7 @@ const tokenExtractor = (request, response, next) => {
     const authorization = request.get('Authorization')
     if(authorization && authorization.startsWith('Bearer ')) {
         const token = authorization.replace('Bearer ', '')
-        response.set({token: token})
+        request.token = token
     }
     next()
 }
