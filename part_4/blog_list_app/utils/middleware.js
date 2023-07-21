@@ -10,8 +10,18 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
+const tokenExtractor = (request, response, next) => {
+    const authorization = request.get('Authorization')
+    if(authorization && authorization.startsWith('Bearer ')) {
+        const token = authorization.replace('Bearer ', '')
+        response.set({token: token})
+    }
+    next()
+}
+
 const middleware = {
-    errorHandler
+    errorHandler,
+    tokenExtractor
 }
 
 export default middleware
