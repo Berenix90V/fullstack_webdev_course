@@ -11,12 +11,12 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
-    const token = request.token
+    const currentUserId = request.user
     const decodedToken = jsonwebtoken.verify(token, process.env.SECRET)
-    if(!decodedToken.id){
+    if(!currentUserId){
         return response.status(401).json({error: 'invalid token'})
     }
-    const user = await User.findById(decodedToken.id)
+    const user = await User.findById(currentUserId)
 
     const blog = new Blog({
         title: body.title,
@@ -33,15 +33,14 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
     const blogId = request.params.id
-    const token = request.token
+    const currentUserId = request.user
     const blogToDelete = await Blog.findById(blogId)
-    const user = await User.findById(blogToDelete.user)
-    const decodedToken = jsonwebtoken.verify(token, process.env.SECRET)
-    console.log(decodedToken.id)
-    if(!decodedToken.id){
+    const creator = await User.findById(blogToDelete.user)
+
+    if(!currentUserId){
         return response.status(401).json({error: 'invalid token'})
     }
-    if(!decodedToken.id === user.id.toString()){
+    if(!(currentUserId === creator.id.toString())){
         return response.status(401).json({error: 'user not authorized to delete the blog'})
     }
     await Blog.findByIdAndDelete(blogId)
