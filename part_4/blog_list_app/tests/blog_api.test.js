@@ -173,16 +173,50 @@ describe('creation of a blog', () => {
 })
 
 describe('deletion of a blog', () => {
-    test('succeeds with status code 204', async () => {
+    test('succeeds with status code 204 if deleted by the creator', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
+        const creator = await helper.blogCreator()
+        const creatorToAuthenticate = {
+            username: creator.username,
+            id: creator._id
+        }
+        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set({'Authorization': 'Bearer '+validToken})
             .expect(204)
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
         const blogsIds = blogsAtEnd.map(b => b.id)
         expect(blogsIds).not.toContain(blogToDelete.id)
+    })
+    test('fails with status code 401 if malformed token', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+        const creator = await helper.blogCreator()
+        const creatorToAuthenticate = {
+            username: creator.username,
+        }
+        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set({'Authorization': 'Bearer '+validToken})
+            .expect(401)
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    })
+    test('fails with status code 401 if not valid token', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+        const creator = await helper.blogCreator()
+        const validToken = 'abc'
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set({'Authorization': 'Bearer '+validToken})
+            .expect(400)
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
     })
 })
 
