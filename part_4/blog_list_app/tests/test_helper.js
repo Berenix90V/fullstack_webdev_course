@@ -1,5 +1,6 @@
 import Blog from '../models/blog.js'
 import User from "../models/user.js";
+import jsonwebtoken from "jsonwebtoken";
 
 
 
@@ -98,6 +99,15 @@ const getInitialBlogsWithCreator = async () => {
     return initialBlogs
 }
 
+const getValidToken = async () => {
+    const creator = await helper.blogCreator()
+    const creatorToAuthenticate = {
+        username: creator.username,
+        id: creator.id
+    }
+    return jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
+}
+
 const helper={
     initialBlogs,
     initialUsers,
@@ -105,7 +115,8 @@ const helper={
     blogIdNotExisting,
     usersInDb,
     blogCreator,
-    getInitialBlogsWithCreator
+    getInitialBlogsWithCreator,
+    getValidToken
 }
 
 export default helper

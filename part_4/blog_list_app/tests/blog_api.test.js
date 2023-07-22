@@ -44,6 +44,13 @@ describe('view all blogs', () => {
         }
         expect(Object.keys(ids).length).toBe(blogs.length)
     })
+    test('verify existence of property user', async () => {
+        const response = await api.get('/api/blogs')
+        const blogs = response.body
+        for(const blog of blogs){
+            expect(blog.user).toBeDefined()
+        }
+    })
 })
 
 describe('creation of a blog', () => {
@@ -90,7 +97,7 @@ describe('creation of a blog', () => {
             title: "New React patterns",
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
-            likes: 10,
+            likes: 10
         }
         await api
             .post('/api/blogs')
@@ -103,16 +110,16 @@ describe('creation of a blog', () => {
     })
 
     test('fails with invalid token format', async ()=> {
-        const validToken = 'abc'
+        const invalidToken = 'abc'
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
-            likes: 10,
+            likes: 10
         }
         await api
             .post('/api/blogs')
-            .set({'Authorization': 'Bearer '+validToken})
+            .set({'Authorization': 'Bearer '+invalidToken})
             .send(newBlog)
             .expect(400)
             .expect('Content-Type', /application\/json/)
@@ -121,17 +128,11 @@ describe('creation of a blog', () => {
     })
 
     test('default value for likes is 0', async () => {
-        const creator = await helper.blogCreator()
-        const creatorToAuthenticate = {
-            username: creator.username,
-            id: creator.id
-        }
-        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
+        const validToken = await helper.getValidToken()
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
-            url: "https://reactpatterns.com/",
-            userId: creator.id
+            url: "https://reactpatterns.com/"
         }
         const response = await api
             .post('/api/blogs')
@@ -144,17 +145,11 @@ describe('creation of a blog', () => {
     })
 
     test('not valid blog is not added (url missing)', async () => {
-        const creator = await helper.blogCreator()
-        const creatorToAuthenticate = {
-            username: creator.username,
-            id: creator.id
-        }
-        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
+        const validToken = await helper.getValidToken()
         const newBlog = {
             title: "New React patterns",
             author: "Michael Chen",
-            likes: 12,
-            userId: creator.id
+            likes: 12
         }
         await api
             .post('/api/blogs')
@@ -164,12 +159,7 @@ describe('creation of a blog', () => {
     })
 
     test('not valid blog is not added (title missing)', async () => {
-        const creator = await helper.blogCreator()
-        const creatorToAuthenticate = {
-            username: creator.username,
-            id: creator.id
-        }
-        const validToken = jsonwebtoken.sign(creatorToAuthenticate, process.env.SECRET)
+        const validToken = await helper.getValidToken()
         const newBlog = {
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
