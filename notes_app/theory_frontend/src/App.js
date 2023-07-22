@@ -27,6 +27,15 @@ const App = () => {
             })
     }, [])
 
+    useEffect(() => {
+        const loggedUserJSON = window.getItem('loggedNoteappUser')
+        if(loggedUserJSON){
+            const parsedUser = JSON.parse(loggedUserJSON)
+            setUser(parsedUser)
+            noteServices.setToken(user.token)
+        }
+    })
+
     const handleLogin = async (event) => {
         event.preventDefault()
         console.log('logging in with', username, password)
