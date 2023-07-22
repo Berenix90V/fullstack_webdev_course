@@ -28,11 +28,11 @@ const App = () => {
     }, [])
 
     useEffect(() => {
-        const loggedUserJSON = window.getItem('loggedNoteappUser')
+        const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
         if(loggedUserJSON){
             const parsedUser = JSON.parse(loggedUserJSON)
             setUser(parsedUser)
-            noteServices.setToken(user.token)
+            noteServices.setToken(parsedUser.token)
         }
     })
 
@@ -50,6 +50,21 @@ const App = () => {
             setUser(user)
         } catch (exception) {
             setErrorMessage('Wrong credentials')
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+        }
+    }
+
+    const handleLogout = async (event) => {
+        event.preventDefault()
+        try{
+            window.localStorage.removeItem('loggedNoteappUser')
+            setUsername('')
+            setPassword('')
+            setUser(null)
+        } catch (exception) {
+            setErrorMessage(exception.message)
             setTimeout(() => {
                 setErrorMessage(null)
             }, 5000)
@@ -97,7 +112,7 @@ const App = () => {
                        handleLogin={handleLogin}
                        setUsername={setUsername}
                        setPassword={setPassword}/>
-            { user && <div><p>{user.username} logged in</p></div> }
+            { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
             <NoteForm user={user} newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />
             <Notification message={errorMessage} className='error' />
             <button onClick={()=>setShowAll(!showAll)}>
