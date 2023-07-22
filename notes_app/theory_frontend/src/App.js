@@ -4,6 +4,8 @@ import noteServices from "./services/notes"
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 import loginService from "./services/login";
+import LoginForm from "./components/LoginForm";
+import NoteForm from "./components/NoteForm";
 
 const App = () => {
     const [notes, setNotes] = useState([])
@@ -73,49 +75,17 @@ const App = () => {
             })
     }
 
-    const loginForm = () => {
-        return (
-            <form onSubmit={handleLogin}>
-                <div>
-                    username
-                    <input
-                        type="text"
-                        value={username}
-                        name="Username"
-                        onChange={({target}) => setUsername(target.value)}
-                    />
-                </div>
-                <div>
-                    password
-                    <input
-                        type="password"
-                        value={password}
-                        name="Password"
-                        onChange={({target}) => setPassword(target.value)}
-                    />
-                </div>
-                <button type="subit" >login</button>
-            </form>
-        )
-    }
-
-    const noteForm = () => {
-        return (
-            <form onSubmit={addNote}>
-                <input value={newNote} onChange={handleNoteChange}/>
-                <button type="submit">save</button>
-            </form>
-        )
-    }
-
     return (
         <div>
             <h1>Notes</h1>
-            { !user && loginForm() }
-            { user && <div>
-                <p>{username} logged in</p>
-                {noteForm()}
-            </div> }
+            <LoginForm user={user}
+                       username={username}
+                       password={password}
+                       handleLogin={handleLogin}
+                       setUsername={setUsername}
+                       setPassword={setPassword}/>
+            { user && <div><p>{user.username} logged in</p></div> }
+            <NoteForm user={user} newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />
             <Notification message={errorMessage} className='error' />
             <button onClick={()=>setShowAll(!showAll)}>
                 show {showAll? 'important': 'all'}
