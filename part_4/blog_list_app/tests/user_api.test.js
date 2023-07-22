@@ -96,6 +96,15 @@ describe('View all users', () => {
         const users = response.body
         expect(users).toHaveLength(usersInDb.length)
     })
+    test('verify that each user has the property blogs', async () => {
+        const response = await api
+            .get('/api/users')
+            .expect(200)
+        const users = response.body
+        for(const user of users) {
+            expect(user).toHaveProperty('blogs')
+        }
+    })
 })
 afterAll(async () => {
     await mongoose.connection.close()
