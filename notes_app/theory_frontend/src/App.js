@@ -111,7 +111,11 @@ const App = () => {
     return (
         <div>
             <h1>Notes</h1>
-            { user === null? loginForm() : noteForm() }
+            { !user && loginForm() }
+            { user && <div>
+                <p>{username} logged in</p>
+                {noteForm()}
+            </div> }
             <Notification message={errorMessage} className='error' />
             <button onClick={()=>setShowAll(!showAll)}>
                 show {showAll? 'important': 'all'}
