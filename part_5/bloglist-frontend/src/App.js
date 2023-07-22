@@ -15,9 +15,16 @@ const App = () => {
         )
     }, [])
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault()
-        console.log('login with ', username, password)
+        try{
+            const user = await loginService.login({username, password})
+            setUser(user)
+            setUsername('')
+            setPassword('')
+        } catch(error) {
+            console.log('Error: ', error.message)
+        }
     }
 
     if(user){
