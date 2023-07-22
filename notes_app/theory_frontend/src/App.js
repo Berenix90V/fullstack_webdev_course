@@ -72,9 +72,9 @@ const App = () => {
                 setNotes(notes.filter(n=>n.id!==id))
             })
     }
-    return (
-        <div>
-            <h1>Notes</h1>
+
+    const loginForm = () => {
+        return (
             <form onSubmit={handleLogin}>
                 <div>
                     username
@@ -96,6 +96,23 @@ const App = () => {
                 </div>
                 <button type="subit" >login</button>
             </form>
+        )
+    }
+
+    const noteForm = () => {
+        return (
+            <form onSubmit={addNote}>
+                <input value={newNote} onChange={handleNoteChange}/>
+                <button type="submit">save</button>
+            </form>
+        )
+    }
+
+    return (
+        <div>
+            <h1>Notes</h1>
+            { user === null && loginForm() }
+            { user !== null && noteForm() }
             <Notification message={errorMessage} className='error' />
             <button onClick={()=>setShowAll(!showAll)}>
                 show {showAll? 'important': 'all'}
@@ -103,10 +120,7 @@ const App = () => {
             <ul>
                 {notesToShow.map((note)=> <Note key={note.id} note={note} toggleImportance={()=>toggleImportanceOf(note.id)}/>)}
             </ul>
-            <form onSubmit={addNote}>
-                <input value={newNote} onChange={handleNoteChange}/>
-                <button type="submit">save</button>
-            </form>
+
             <Footer />
         </div>
     );
