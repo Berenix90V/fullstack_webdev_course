@@ -34,6 +34,7 @@ const App = () => {
         try{
             const user = await loginService.login({username, password})
             setUser(user)
+            blogService.setToken(user.token)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
             setUsername('')
             setPassword('')
@@ -47,11 +48,13 @@ const App = () => {
         try{
             window.localStorage.removeItem('loggedUser')
             setUser(null)
+            blogService.setToken(null)
         } catch (error){
             console.log('Logout Error: ', error.message)
         }
     }
-    const handleAddNewBlog = () => {
+    const addNewBlog = (event) => {
+        event.preventDefault()
         console.log('submitted blog with title ', title)
     }
 
@@ -60,7 +63,7 @@ const App = () => {
             <div>
             <h2>blogs</h2>
                 <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
-                <AddNewBlogForm handleAddNewBlog={handleAddNewBlog}
+                <AddNewBlogForm handleAddNewBlog={addNewBlog}
                                 title={title} setTitle={setTitle}
                                 author={author} setAuthor={setAuthor}
                                 url={url} setUrl={setUrl}

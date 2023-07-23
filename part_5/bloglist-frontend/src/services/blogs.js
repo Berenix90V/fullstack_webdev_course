@@ -22,6 +22,7 @@ const create = (newObject) => {
 
 const blogServices = {
     getAll,
-    create
+    create,
+    setToken
 }
 export default blogServices
