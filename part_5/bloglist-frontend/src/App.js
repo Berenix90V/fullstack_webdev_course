@@ -16,9 +16,13 @@ const App = () => {
     const [url, setUrl] = useState('')
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs( blogs )
-        )
+        const getBlogs = async() => {
+            const blogs = await blogService.getAll()
+            if (blogs){
+                setBlogs(blogs)
+            }
+        }
+        getBlogs()
     }, [])
 
     useEffect( () => {
