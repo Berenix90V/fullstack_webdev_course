@@ -1,7 +1,7 @@
 const Notification = ({message, className}) => {
     if(message !==''){
         return(
-            <div className={className} > {message} </div>
+            <div className={className}> {message} </div>
         )
     }
 }
