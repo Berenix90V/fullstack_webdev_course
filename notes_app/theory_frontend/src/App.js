@@ -12,9 +12,12 @@ const App = () => {
     const [newNote, setNewNote] = useState('a new note...')
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] =  useState(null)
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
+
+    const [loginVisible, setLoginVisible] = useState(false)
 
     const notesToShow = showAll? notes : notes.filter((note)=>note.important)
 
@@ -103,15 +106,33 @@ const App = () => {
             })
     }
 
-    return (
-        <div>
-            <h1>Notes</h1>
-            { !user && <LoginForm
+    const loginForm = () => {
+        const hideWhenVisible = {display: loginVisible? 'none' : ''}
+        const showWhenVisible = {display: loginVisible? '' : 'none'}
+
+        return (
+            <div>
+                <div style={hideWhenVisible}>
+                    <button onClick={() => setLoginVisible(true)}>Log in</button>
+                </div>
+                <div style={showWhenVisible}>
+                    <LoginForm
                         username={username}
                         password={password}
                         handleLogin={handleLogin}
                         setUsername={setUsername}
-                        setPassword={setPassword}/>}
+                        setPassword={setPassword}
+                    />
+                    <button onClick={() => setLoginVisible(false)}>cancel</button>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div>
+            <h1>Notes</h1>
+            { !user && loginForm()}
             { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
             <NoteForm user={user} newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />
             <Notification message={errorMessage} className='error' />
