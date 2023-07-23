@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import NoteForm from "./components/NoteForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
     const [notes, setNotes] = useState([])
@@ -111,21 +112,15 @@ const App = () => {
         const showWhenVisible = {display: loginVisible? '' : 'none'}
 
         return (
-            <div>
-                <div style={hideWhenVisible}>
-                    <button onClick={() => setLoginVisible(true)}>Log in</button>
-                </div>
-                <div style={showWhenVisible}>
-                    <LoginForm
-                        username={username}
-                        password={password}
-                        handleLogin={handleLogin}
-                        setUsername={setUsername}
-                        setPassword={setPassword}
-                    />
-                    <button onClick={() => setLoginVisible(false)}>cancel</button>
-                </div>
-            </div>
+            <Togglable buttonLabel="Log in">
+                <LoginForm
+                    username={username}
+                    password={password}
+                    handleLogin={handleLogin}
+                    setUsername={setUsername}
+                    setPassword={setPassword}
+                />
+            </Togglable>
         )
     }
 
