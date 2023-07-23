@@ -76,6 +76,12 @@ const App = () => {
             setAuthor('')
             setUrl('')
             setBlogs(blogs.concat(createdBlog))
+            setNotification(`A new blog is created: ${createdBlog.title} by ${createdBlog.author}`)
+            setNotificationType('success')
+            setTimeout(() => {
+                setNotification('')
+                setNotificationType('')
+            }, 5000)
         }
     }
 
@@ -84,6 +90,7 @@ const App = () => {
             <div>
             <h2>blogs</h2>
                 <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
+                <Notification message={notification} className={notificationType}/>
                 <AddNewBlogForm handleAddNewBlog={addNewBlog}
                                 title={title} setTitle={setTitle}
                                 author={author} setAuthor={setAuthor}
