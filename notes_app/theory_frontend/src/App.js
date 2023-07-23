@@ -18,8 +18,6 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
-    const [loginVisible, setLoginVisible] = useState(false)
-
     const notesToShow = showAll? notes : notes.filter((note)=>note.important)
 
 
@@ -108,9 +106,6 @@ const App = () => {
     }
 
     const loginForm = () => {
-        const hideWhenVisible = {display: loginVisible? 'none' : ''}
-        const showWhenVisible = {display: loginVisible? '' : 'none'}
-
         return (
             <Togglable buttonLabel="Log in">
                 <LoginForm
@@ -129,7 +124,9 @@ const App = () => {
             <h1>Notes</h1>
             { !user && loginForm()}
             { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
-            { user && <NoteForm user={user} newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />}
+            { user && <Togglable buttonLabel="new note">
+                <NoteForm newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />
+            </Togglable>}
             <Notification message={errorMessage} className='error' />
             <button onClick={()=>setShowAll(!showAll)}>
                 show {showAll? 'important': 'all'}
