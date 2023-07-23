@@ -16,11 +16,20 @@ const App = () => {
         )
     }, [])
 
+    useEffect( () => {
+        const loggedUserJSON = window.localStorage.getItem('loggedUser')
+        if(loggedUserJSON){
+            const user = JSON.parse(loggedUserJSON)
+            setUser(user)
+        }
+    })
+
     const handleLogin = async (event) => {
         event.preventDefault()
         try{
             const user = await loginService.login({username, password})
             setUser(user)
+            window.localStorage.setItem('loggedUser', JSON.stringify(user))
             setUsername('')
             setPassword('')
         } catch(error) {
