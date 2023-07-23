@@ -53,9 +53,15 @@ const App = () => {
             console.log('Logout Error: ', error.message)
         }
     }
-    const addNewBlog = (event) => {
+    const addNewBlog = async (event) => {
         event.preventDefault()
-        console.log('submitted blog with title ', title)
+        const createdBlog = await blogService.create({title, author, url})
+        if(createdBlog){
+            setTitle('')
+            setAuthor('')
+            setUrl('')
+            setBlogs(blogs.concat(createdBlog))
+        }
     }
 
     if(user){
