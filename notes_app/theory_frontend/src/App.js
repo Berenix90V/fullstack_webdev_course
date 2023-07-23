@@ -34,7 +34,7 @@ const App = () => {
             setUser(parsedUser)
             noteServices.setToken(parsedUser.token)
         }
-    })
+    }, [])
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -106,12 +106,12 @@ const App = () => {
     return (
         <div>
             <h1>Notes</h1>
-            <LoginForm user={user}
-                       username={username}
-                       password={password}
-                       handleLogin={handleLogin}
-                       setUsername={setUsername}
-                       setPassword={setPassword}/>
+            { !user && <LoginForm
+                        username={username}
+                        password={password}
+                        handleLogin={handleLogin}
+                        setUsername={setUsername}
+                        setPassword={setPassword}/>}
             { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
             <NoteForm user={user} newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />
             <Notification message={errorMessage} className='error' />
