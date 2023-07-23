@@ -33,7 +33,17 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch(error) {
-            console.log('Error: ', error.message)
+            console.log('Login Error: ', error.message)
+        }
+    }
+
+    const handleLogout = () => {
+        event.preventDefault()
+        try{
+            window.localStorage.removeItem('loggedUser')
+            setUser(null)
+        } catch (error){
+            console.log('Logout Error: ', error.message)
         }
     }
 
