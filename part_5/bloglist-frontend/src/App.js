@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import AddNewBlogForm from "./components/AddNewBlogForm";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -14,6 +15,9 @@ const App = () => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
+
+    const [notification, setNotification] = useState('')
+    const [notificationType, setNotificationType] = useState('')
 
     useEffect(() => {
         const getBlogs = async() => {
@@ -44,6 +48,12 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch(error) {
+            setNotification('Invalid user or password')
+            setNotificationType('error')
+            setTimeout(() => {
+                setNotification('')
+                setNotificationType('')
+            }, 5000)
             console.log('Login Error: ', error.message)
         }
     }
@@ -88,6 +98,8 @@ const App = () => {
     else{
         return (
            <>
+               <h2>blogs</h2>
+               <Notification message={notification} className={notificationType}/>
                <LoginForm
                    handleLogin={handleLogin} username={username} password={password}
                    setUsername={setUsername} setPassword={setPassword}
