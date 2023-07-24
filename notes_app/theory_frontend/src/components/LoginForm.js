@@ -1,4 +1,26 @@
-const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) => {
+import {useState} from "react";
+import Notification from "./Notification";
+
+const LoginForm = ({login, setUser}) => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] =  useState(null)
+
+    const handleLogin = async (event) => {
+        event.preventDefault()
+        try{
+            const user = await login(username, password)
+            setUsername('')
+            setPassword('')
+            setUser(user)
+        } catch (exception) {
+            setErrorMessage('Wrong credentials')
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+        }
+    }
+
     return (
         <form onSubmit={handleLogin}>
             <div>
@@ -20,6 +42,7 @@ const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) 
                 />
             </div>
             <button type="submit" >login</button>
+            <Notification message={errorMessage} className='error' />
         </form>
     )
 }

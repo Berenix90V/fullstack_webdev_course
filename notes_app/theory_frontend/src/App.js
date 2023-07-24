@@ -13,8 +13,6 @@ const App = () => {
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] =  useState(null)
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
     const notesToShow = showAll? notes : notes.filter((note)=>note.important)
@@ -37,32 +35,19 @@ const App = () => {
         }
     }, [])
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
-        console.log('logging in with', username, password)
-        try{
-            const user = await loginService.login({username, password})
-            window.localStorage.setItem(
-                'loggedNoteappUser', JSON.stringify(user)
-            )
-            noteServices.setToken(user.token)
-            setUsername('')
-            setPassword('')
-            setUser(user)
-        } catch (exception) {
-            setErrorMessage('Wrong credentials')
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
-        }
+    const login = async (username, password) => {
+        const user = await loginService.login({username, password})
+        window.localStorage.setItem(
+            'loggedNoteappUser', JSON.stringify(user)
+        )
+        noteServices.setToken(user.token)
+        return user
     }
 
     const handleLogout = async (event) => {
         event.preventDefault()
         try{
             window.localStorage.removeItem('loggedNoteappUser')
-            setUsername('')
-            setPassword('')
             setUser(null)
         } catch (exception) {
             setErrorMessage(exception.message)
@@ -100,11 +85,8 @@ const App = () => {
         return (
             <Togglable buttonLabel="Log in">
                 <LoginForm
-                    username={username}
-                    password={password}
-                    handleLogin={handleLogin}
-                    setUsername={setUsername}
-                    setPassword={setPassword}
+                    login={login}
+                    setUser={setUser}
                 />
             </Togglable>
         )
