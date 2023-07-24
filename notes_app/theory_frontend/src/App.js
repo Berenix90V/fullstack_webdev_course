@@ -10,7 +10,6 @@ import Togglable from "./components/Togglable";
 
 const App = () => {
     const [notes, setNotes] = useState([])
-    const [newNote, setNewNote] = useState('a new note...')
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] =  useState(null)
 
@@ -72,23 +71,7 @@ const App = () => {
             }, 5000)
         }
     }
-    const handleNoteChange = (event) => {
-        setNewNote(event.target.value)
-    }
-    const addNote = (event)=>{
-        event.preventDefault()
-        const noteObject = {
-            content: newNote,
-            important: Math.random()<0.5,
-            id: notes.length+1
-        }
-        noteServices
-            .create(noteObject)
-            .then((createdNote)=>{
-                setNotes(notes.concat(createdNote))
-                setNewNote('')
-            })
-    }
+
     const toggleImportanceOf = id => {
         const note = notes.find(note=>note.id===id)
         const changedNote = {...note, important: !note.important}
@@ -102,6 +85,14 @@ const App = () => {
                     setErrorMessage(null)
                 }, 5000)
                 setNotes(notes.filter(n=>n.id!==id))
+            })
+    }
+
+    const createNote = (noteObject) => {
+        noteServices
+            .create(noteObject)
+            .then((createdNote)=>{
+                setNotes(notes.concat(createdNote))
             })
     }
 
@@ -125,7 +116,7 @@ const App = () => {
             { !user && loginForm()}
             { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
             { user && <Togglable buttonLabel="new note">
-                <NoteForm newNote={newNote} handleAddNote={addNote} handleNoteChange={handleNoteChange} />
+                <NoteForm createNote={createNote} />
             </Togglable>}
             <Notification message={errorMessage} className='error' />
             <button onClick={()=>setShowAll(!showAll)}>
