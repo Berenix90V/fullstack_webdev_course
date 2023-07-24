@@ -1,5 +1,5 @@
 import Note from "./components/Note";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import noteServices from "./services/notes"
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
@@ -14,6 +14,8 @@ const App = () => {
     const [errorMessage, setErrorMessage] =  useState(null)
 
     const [user, setUser] = useState(null)
+
+    const noteFormRef = useRef()
 
     const notesToShow = showAll? notes : notes.filter((note)=>note.important)
 
@@ -97,7 +99,7 @@ const App = () => {
             <h1>Notes</h1>
             { !user && loginForm()}
             { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
-            { user && <Togglable buttonLabel="new note">
+            { user && <Togglable buttonLabel="new note" ref={noteFormRef}>
                 <NoteForm createNote={createNote} />
             </Togglable>}
             <Notification message={errorMessage} className='error' />
