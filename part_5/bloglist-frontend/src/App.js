@@ -94,7 +94,7 @@ const App = () => {
                 </Togglable>
 
                 {blogs.map(blog =>
-                    <Blog key={blog.id} blog={blog} username={user.username} />
+                    <Blog key={blog.id} blog={blog} userId={user.id} />
                 )}
             </div>
         )

@@ -1,7 +1,7 @@
 import {useState} from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({blog, username}) => {
+const Blog = ({blog, userId}) => {
     const [visibleDetails, setVisibleDetails] = useState(false)
     const hideWhenVisible = {display: visibleDetails? 'none':''}
     const showWhenVisible = {display: visibleDetails? '':'none'}
@@ -37,7 +37,7 @@ const Blog = ({blog, username}) => {
                 <p>likes: {blog.likes} <button onClick={updateLikes}>like</button> </p>
                 <p>{blog.user.name}</p>
             </div>
-            {blog.user.username === username && <button onClick={deleteBlog}>delete</button>}
+            {blog.user.id === userId && <button onClick={deleteBlog}>delete</button>}
         </div>
     )
 }
