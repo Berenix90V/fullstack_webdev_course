@@ -11,7 +11,12 @@ const Blog = ({blog}) => {
 
     const updateLikes = async () => {
         blog.likes +=1
-        await blogService.update(blog)
+        try{
+            await blogService.update(blog)
+        } catch(error){
+            console.log(error.message)
+        }
+
     }
 
     return(
