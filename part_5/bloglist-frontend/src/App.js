@@ -13,10 +13,6 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [url, setUrl] = useState('')
-
     const [notification, setNotification] = useState('')
     const [notificationType, setNotificationType] = useState('')
 
@@ -71,14 +67,10 @@ const App = () => {
             console.log('Logout Error: ', error.message)
         }
     }
-    const addNewBlog = async (event) => {
-        event.preventDefault()
+    const addNewBlog = async (blogObject) => {
         blogFormRef.current.toggleVisibility()
-        const createdBlog = await blogService.create({title, author, url})
+        const createdBlog = await blogService.create(blogObject)
         if(createdBlog){
-            setTitle('')
-            setAuthor('')
-            setUrl('')
             setBlogs(blogs.concat(createdBlog))
             setNotification(`A new blog is created: ${createdBlog.title} by ${createdBlog.author}`)
             setNotificationType('success')
@@ -96,10 +88,7 @@ const App = () => {
                 <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
                 <Notification message={notification} className={notificationType}/>
                 <Togglable buttonLabel={"create new blog"} ref={blogFormRef}>
-                    <AddNewBlogForm handleAddNewBlog={addNewBlog}
-                                    title={title} setTitle={setTitle}
-                                    author={author} setAuthor={setAuthor}
-                                    url={url} setUrl={setUrl}
+                    <AddNewBlogForm createBlog={addNewBlog}
                     />
                 </Togglable>
 
