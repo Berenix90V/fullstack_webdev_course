@@ -1,11 +1,11 @@
-import {useState} from "react";
-import blogService from "../services/blogs";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, userId}) => {
+const Blog = ({ blog, userId }) => {
     const [visibleDetails, setVisibleDetails] = useState(false)
-    const hideWhenVisible = {display: visibleDetails? 'none':''}
-    const showWhenVisible = {display: visibleDetails? '':'none'}
+    const hideWhenVisible = { display: visibleDetails? 'none':'' }
+    const showWhenVisible = { display: visibleDetails? '':'none' }
     const toggleVisibility = () => {
         setVisibleDetails(!visibleDetails)
     }
@@ -45,7 +45,7 @@ const Blog = ({blog, userId}) => {
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    userId: PropTypes.number.isRequired
+    userId: PropTypes.string.isRequired
 }
 
 export default Blog

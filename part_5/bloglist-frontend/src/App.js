@@ -1,11 +1,11 @@
-import {useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from "./services/login";
-import LoginForm from "./components/LoginForm";
-import AddNewBlogForm from "./components/AddNewBlogForm";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
+import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import AddNewBlogForm from './components/AddNewBlogForm'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -21,7 +21,7 @@ const App = () => {
     useEffect(() => {
         const getBlogs = async() => {
             const blogs = await blogService.getAll()
-            blogs.sort((a,b)=>b.likes-a.likes)
+            blogs.sort((a,b) => b.likes-a.likes)
             if (blogs){
                 setBlogs(blogs)
             }
@@ -41,7 +41,7 @@ const App = () => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try{
-            const user = await loginService.login({username, password})
+            const user = await loginService.login({ username, password })
             setUser(user)
             blogService.setToken(user.token)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
@@ -85,10 +85,10 @@ const App = () => {
     if(user){
         return (
             <div>
-            <h2>blogs</h2>
+                <h2>blogs</h2>
                 <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
                 <Notification message={notification} className={notificationType}/>
-                <Togglable buttonLabel={"create new blog"} ref={blogFormRef}>
+                <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
                     <AddNewBlogForm createBlog={addNewBlog}
                     />
                 </Togglable>
@@ -101,14 +101,14 @@ const App = () => {
     }
     else{
         return (
-           <>
-               <h2>blogs</h2>
-               <Notification message={notification} className={notificationType}/>
-               <LoginForm
-                   handleLogin={handleLogin} username={username} password={password}
-                   setUsername={setUsername} setPassword={setPassword}
-               />
-           </>
+            <>
+                <h2>blogs</h2>
+                <Notification message={notification} className={notificationType}/>
+                <LoginForm
+                    handleLogin={handleLogin} username={username} password={password}
+                    setUsername={setUsername} setPassword={setPassword}
+                />
+            </>
         )
     }
 

@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
-const Notification = ({message, className}) => {
+const Notification = ({ message, className }) => {
     if(message !==''){
         return(
             <div className={className}> {message} </div>
