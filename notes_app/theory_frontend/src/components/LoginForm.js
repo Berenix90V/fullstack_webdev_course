@@ -1,5 +1,6 @@
 import {useState} from "react";
 import Notification from "./Notification";
+import PropTypes from "prop-types";
 
 const LoginForm = ({login, setUser}) => {
     const [username, setUsername] = useState('')
@@ -45,6 +46,11 @@ const LoginForm = ({login, setUser}) => {
             <Notification message={errorMessage} className='error' />
         </form>
     )
+}
+
+LoginForm.propTypes = {
+    login: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired
 }
 
 export default LoginForm
