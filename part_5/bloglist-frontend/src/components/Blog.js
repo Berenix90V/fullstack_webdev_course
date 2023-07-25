@@ -1,5 +1,6 @@
 import {useState} from "react";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const Blog = ({blog, userId}) => {
     const [visibleDetails, setVisibleDetails] = useState(false)
@@ -42,7 +43,9 @@ const Blog = ({blog, userId}) => {
     )
 }
 
-
-
+Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    userId: PropTypes.number.isRequired
+}
 
 export default Blog
