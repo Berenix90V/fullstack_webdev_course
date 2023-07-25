@@ -1,12 +1,12 @@
-import Note from "./components/Note";
-import {useState, useEffect, useRef} from "react";
-import noteServices from "./services/notes"
-import Notification from "./components/Notification";
-import Footer from "./components/Footer";
-import loginService from "./services/login";
-import LoginForm from "./components/LoginForm";
-import NoteForm from "./components/NoteForm";
-import Togglable from "./components/Togglable";
+import Note from './components/Note'
+import { useState, useEffect, useRef } from 'react'
+import noteServices from './services/notes'
+import Notification from './components/Notification'
+import Footer from './components/Footer'
+import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
     const [notes, setNotes] = useState([])
@@ -17,7 +17,7 @@ const App = () => {
 
     const noteFormRef = useRef()
 
-    const notesToShow = showAll? notes : notes.filter((note)=>note.important)
+    const notesToShow = showAll? notes : notes.filter((note) => note.important)
 
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const App = () => {
     }, [])
 
     const login = async (username, password) => {
-        const user = await loginService.login({username, password})
+        const user = await loginService.login({ username, password })
         window.localStorage.setItem(
             'loggedNoteappUser', JSON.stringify(user)
         )
@@ -60,18 +60,18 @@ const App = () => {
     }
 
     const toggleImportanceOf = id => {
-        const note = notes.find(note=>note.id===id)
-        const changedNote = {...note, important: !note.important}
+        const note = notes.find(note => note.id===id)
+        const changedNote = { ...note, important: !note.important }
         noteServices
             .update(id, changedNote)
-            .then(updatedNote => setNotes(notes.map(n=>n.id!==id?n:updatedNote)))
-            .catch(error =>{
+            .then(updatedNote => setNotes(notes.map(n => n.id!==id?n:updatedNote)))
+            .catch(()  => {
                 const message = `the note '${note.content}' was already deleted from the server`
                 setErrorMessage(message)
                 setTimeout(() => {
                     setErrorMessage(null)
                 }, 5000)
-                setNotes(notes.filter(n=>n.id!==id))
+                setNotes(notes.filter(n => n.id!==id))
             })
     }
 
@@ -79,7 +79,7 @@ const App = () => {
         noteFormRef.current.toggleVisibility()
         noteServices
             .create(noteObject)
-            .then((createdNote)=>{
+            .then((createdNote) => {
                 setNotes(notes.concat(createdNote))
             })
     }
@@ -104,16 +104,16 @@ const App = () => {
                 <NoteForm createNote={createNote} />
             </Togglable>}
             <Notification message={errorMessage} className='error' />
-            <button onClick={()=>setShowAll(!showAll)}>
+            <button onClick={() => setShowAll(!showAll)}>
                 show {showAll? 'important': 'all'}
             </button>
             <ul>
-                {notesToShow.map((note)=> <Note key={note.id} note={note} toggleImportance={()=>toggleImportanceOf(note.id)}/>)}
+                {notesToShow.map((note) => <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)}/>)}
             </ul>
 
             <Footer />
         </div>
-    );
+    )
 }
 
 /*
@@ -123,4 +123,4 @@ case uses for index as key in map:
 3. the list is never reordered or filtered.
  */
 
-export default App;
+export default App

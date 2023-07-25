@@ -1,8 +1,8 @@
-import {useState} from "react";
-import Notification from "./Notification";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import Notification from './Notification'
+import PropTypes from 'prop-types'
 
-const LoginForm = ({login, setUser}) => {
+const LoginForm = ({ login, setUser }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] =  useState(null)
@@ -30,7 +30,7 @@ const LoginForm = ({login, setUser}) => {
                     type="text"
                     value={username}
                     name="Username"
-                    onChange={({target}) => setUsername(target.value)}
+                    onChange={({ target }) => setUsername(target.value)}
                 />
             </div>
             <div>
@@ -39,7 +39,7 @@ const LoginForm = ({login, setUser}) => {
                     type="password"
                     value={password}
                     name="Password"
-                    onChange={({target}) => setPassword(target.value)}
+                    onChange={({ target }) => setPassword(target.value)}
                 />
             </div>
             <button type="submit" >login</button>
