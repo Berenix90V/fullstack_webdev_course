@@ -68,3 +68,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Personal notes
+## toHaveProperty is not a function
+add this import:
+```javascript
+import '@testing-library/jest-dom'
+```
+## how to use render
+to get the container it is possible to do as follows:
+```javascript
+const renderResult = render(<Component></Component>)
+const element = renderResult.container.querySelector('.className')
+expect(elemnt).toHaveStyle('display: none')
+```

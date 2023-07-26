@@ -12,7 +12,6 @@ test('renders content', () => {
     const {container} = render(<Note note={note} /> )
 
     const element = screen.getByText('Component testing is done with react-testing-library')
-    screen.debug(element)
     expect(element).toBeDefined()
     const div = container.querySelector('.note')
     expect(div).toHaveTextContent('Component testing is done with react-testing-library')
@@ -30,6 +29,5 @@ test('clicking the button calls event handler once', async () => {
 
     const button = screen.getByText('make not important')
     await user.click(button)
-
     expect(mockHandler.mock.calls).toHaveLength(1)
 })
