@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, userId, updateBlog, removeBlog }) => {
@@ -22,13 +21,13 @@ const Blog = ({ blog, userId, updateBlog, removeBlog }) => {
     }
     return(
         <div className="blog">
-            {blog.title} {blog.author}
+            {blog.title} by {blog.author}
             <button style={hideWhenVisible} onClick={toggleVisibility}>view</button>
             <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
-            <div style={showWhenVisible}>
-                <p>url: {blog.url}</p>
-                <p>likes: {blog.likes} <button onClick={updateLikes}>like</button> </p>
-                <p>{blog.user.name}</p>
+            <div style={showWhenVisible} className='additional-info'>
+                <p id='url'>url: {blog.url}</p>
+                <p id='likes'>likes: {blog.likes} <button onClick={updateLikes}>like</button> </p>
+                <p id='user'>{blog.user.name}</p>
             </div>
             {blog.user.id === userId && <button onClick={deleteBlog}>delete</button>}
         </div>
