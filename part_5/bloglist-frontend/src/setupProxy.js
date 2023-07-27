@@ -1,12 +1,11 @@
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
-
-export default function (app) {
+module.exports = function(app) {
     app.use(
         '/api',
         createProxyMiddleware({
             target: 'http://localhost:3003',
             changeOrigin: true,
         })
-    )
-}
+    );
+};
