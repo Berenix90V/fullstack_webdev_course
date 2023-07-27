@@ -26,7 +26,7 @@ const Blog = ({ blog, userId, updateBlog, removeBlog }) => {
             <button style={showWhenVisible} onClick={toggleVisibility} id="hide-button">hide</button>
             <div style={showWhenVisible} className='additional-info'>
                 <p id='url'>url: {blog.url}</p>
-                <p id='likes'>likes: {blog.likes} <button onClick={updateLikes}>like</button> </p>
+                <p id='likes'>likes: {blog.likes} <button onClick={updateLikes} id="add-like">like</button> </p>
                 <p id='user'>{blog.user.name}</p>
             </div>
             {blog.user.id === userId && <button onClick={deleteBlog}>delete</button>}
