@@ -2,7 +2,7 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, userId }) => {
+const Blog = ({ blog, userId, updateBlog, removeBlog }) => {
     const [visibleDetails, setVisibleDetails] = useState(false)
     const hideWhenVisible = { display: visibleDetails? 'none':'' }
     const showWhenVisible = { display: visibleDetails? '':'none' }
@@ -12,20 +12,12 @@ const Blog = ({ blog, userId }) => {
 
     const updateLikes = async () => {
         blog.likes +=1
-        try{
-            await blogService.update(blog)
-        } catch(error){
-            console.log(error.message)
-        }
+        await updateBlog(blog)
     }
     const deleteBlog = async() => {
         const blogId = blog.id
-        try{
-            if(window.confirm(`Remove ${blog.title} by ${blog.author}?`)){
-                await blogService.remove(blogId)
-            }
-        } catch(error){
-            console.log(error.message)
+        if(window.confirm(`Remove ${blog.title} by ${blog.author}?`)){
+            await removeBlog(blogId)
         }
     }
     return(
@@ -45,7 +37,9 @@ const Blog = ({ blog, userId }) => {
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired
+    userId: PropTypes.string.isRequired,
+    updateBlog: PropTypes.func.isRequired,
+    removeBlog: PropTypes.func.isRequired
 }
 
 export default Blog

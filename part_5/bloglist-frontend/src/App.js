@@ -82,6 +82,22 @@ const App = () => {
         }
     }
 
+    const updateBlog = async(blogObject) => {
+        try{
+            await blogService.update(blogObject)
+        } catch(error){
+            console.log(error.message)
+        }
+    }
+
+    const removeBlog = async(blogId) => {
+        try{
+            await blogService.remove(blogId)
+        } catch(error){
+            console.log(error.message)
+        }
+    }
+
     if(user){
         return (
             <div>
@@ -94,7 +110,7 @@ const App = () => {
                 </Togglable>
 
                 {blogs.map(blog =>
-                    <Blog key={blog.id} blog={blog} userId={user.id} />
+                    <Blog key={blog.id} blog={blog} userId={user.id} updateBlog={updateBlog} removeBlog={removeBlog} />
                 )}
             </div>
         )
