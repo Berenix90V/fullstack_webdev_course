@@ -1,9 +1,9 @@
 import React from 'react'
 import Blog from './Blog'
+import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import '@testing-library/jest-dom/extend-expect'
-import {render, screen} from '@testing-library/react'
-import userEvent from "@testing-library/user-event";
+import userEvent from '@testing-library/user-event'
 
 describe('<Blog/>', () => {
     let renderResult
@@ -33,5 +33,17 @@ describe('<Blog/>', () => {
         expect(likes).toBeNull()
         const moreInfoDiv = renderResult.container.querySelector('.additional-info')
         expect(moreInfoDiv).toHaveStyle({display: 'none'})
+    })
+    test('renders url and likes if the user click the button to expand the information', async () => {
+        const moreInfoDivBefore = renderResult.container.querySelector('.additional-info')
+        const expandButton = renderResult.container.querySelector('#expand-button')
+        const user = userEvent.setup()
+        await user.click(expandButton)
+        const urlAfter = screen.queryByText("https://www.blog.com", {exact: false})
+        const likesAfter = screen.queryByText("likes", {exact: false})
+        expect(urlAfter).not.toBeNull()
+        expect(likesAfter).not.toBeNull()
+        const moreInfoDivAfter = renderResult.container.querySelector('.additional-info')
+        expect(moreInfoDivAfter).not.toHaveStyle({display: 'none'})
     })
 })
