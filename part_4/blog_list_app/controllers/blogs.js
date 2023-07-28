@@ -56,7 +56,7 @@ blogsRouter.put('/:id', async (request, response) => {
         likes: body.likes,
         user: body.user._id
     }
-    const updatedBlog = await Blog.findByIdAndUpdate(blogId, blog, { runValidators: true, new: true, context: 'query'})
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId, blog, { runValidators: true, new: true, context: 'query'}).populate('user', {username: 1, name: 1})
     if(updatedBlog){
         response.status(200).send(updatedBlog)
     } else {

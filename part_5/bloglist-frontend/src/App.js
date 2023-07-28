@@ -20,14 +20,14 @@ const App = () => {
 
     useEffect(() => {
         const getBlogs = async() => {
-            const blogs = await blogService.getAll()
-            blogs.sort((a,b) => b.likes-a.likes)
-            if (blogs){
-                setBlogs(blogs)
+            const allBlogs = await blogService.getAll()
+            allBlogs.sort((a,b) => b.likes-a.likes)
+            if (allBlogs.length > 0){
+                setBlogs(allBlogs)
             }
         }
         getBlogs()
-    }, [blogs])
+    }, [])
 
     useEffect( () => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -72,7 +72,9 @@ const App = () => {
         blogFormRef.current.toggleVisibility()
         const createdBlog = await blogService.create(blogObject)
         if(createdBlog){
-            setBlogs(blogs.concat(createdBlog))
+            console.log(createdBlog)
+            const updatedBlogs = await blogService.getAll()
+            setBlogs(updatedBlogs)
             setNotification(`A new blog is created: ${createdBlog.title} by ${createdBlog.author}`)
             setNotificationType('success')
             setTimeout(() => {
@@ -85,6 +87,9 @@ const App = () => {
     const updateBlog = async(blogObject) => {
         try{
             await blogService.update(blogObject)
+            const updatedBlogs = await blogService.getAll()
+            updatedBlogs.sort((a,b) => b.likes-a.likes)
+            setBlogs(updatedBlogs)
         } catch(error){
             console.log(error.message)
         }
@@ -93,6 +98,8 @@ const App = () => {
     const removeBlog = async(blogId) => {
         try{
             await blogService.remove(blogId)
+            const updatedBlogs = await blogService.getAll()
+            setBlogs(updatedBlogs)
         } catch(error){
             console.log(error.message)
         }
