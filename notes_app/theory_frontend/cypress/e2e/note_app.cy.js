@@ -30,6 +30,7 @@ describe('Note app', function () {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
         .and('have.css', 'border-style', 'solid')
     cy.get('html').should('not.contain', 'Matti Luukkainen logged in')
+    cy.contains('Matti Luukkainen logged in').should('not.exist')
   })
 
   it('user can login', function () {
