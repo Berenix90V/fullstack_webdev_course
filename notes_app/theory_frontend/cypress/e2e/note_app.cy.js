@@ -63,9 +63,10 @@ describe('Note app', function () {
         })
       })
 
-      it('it can be made not important', function () {
-        cy.contains('another note in cypress').contains('make not important').click()
-        cy.contains('another note in cypress').contains('make important')
+      it.only('it can be made not important', function () {
+        cy.contains('another note in cypress').parent().find('button').as('theButton')
+        cy.get('@theButton').click()
+        cy.get('@theButton').should('contain','make important')
       })
     })
 
