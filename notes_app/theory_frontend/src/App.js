@@ -99,7 +99,7 @@ const App = () => {
         <div>
             <h1>Notes</h1>
             { !user && loginForm()}
-            { user && <div><p>{user.username} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
+            { user && <div><p>{user.name} logged in</p> <button onClick={handleLogout}>Logout</button></div> }
             { user && <Togglable buttonLabel="new note" ref={noteFormRef}>
                 <NoteForm createNote={createNote} />
             </Togglable>}
