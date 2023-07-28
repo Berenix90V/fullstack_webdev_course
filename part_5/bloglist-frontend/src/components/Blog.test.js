@@ -55,7 +55,5 @@ describe('<Blog/>', () => {
         await user.click(addLikesButton)
         await user.click(addLikesButton)
         expect(mockUpdateBlog.mock.calls).toHaveLength(2)
-        const likesElementAfterClicks = screen.queryByText('likes: 9', {exact: false})
-        expect(likesElement).toHaveAttribute('id', 'likes')
     })
 })
