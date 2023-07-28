@@ -26,7 +26,7 @@
 
 Cypress.Commands.add('login', ({username, password}) => {
     cy.request('POST', `${Cypress.env('BACKEND')}/api/login`, {
-        username: 'mluukkai', password: 'salainen'
+        username: username, password: password
     }).then(response => {
         localStorage.setItem('loggedNoteappUser', JSON.stringify(response.body))
         cy.visit('')
