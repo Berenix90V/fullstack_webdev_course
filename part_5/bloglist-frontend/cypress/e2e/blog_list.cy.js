@@ -58,7 +58,16 @@ describe('Blog list app', function () {
     })
 
     describe('when more blogs and users exist', function () {
-
+      const blogCreatedBySuperuser = {
+        title: 'Another Blog',
+        author: 'Oppenheimer',
+        url: 'https://www.blog.com'
+      }
+      const blogCreatedByMatti = {
+        title: 'Blog',
+        author: 'Einstein',
+        url: 'https://www.blog.com'
+      }
       beforeEach( function () {
         const user = {
           username: 'root',
@@ -68,27 +77,22 @@ describe('Blog list app', function () {
         cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
         cy.get('#logout-button').click()
         cy.login({username: 'root', password: 'password'})
-        const blogCreatedBySuperuser = {
-          title: 'Another Blog',
-          author: 'Oppenheimer',
-          url: 'https://www.blog.com'
-        }
         cy.createBlog(blogCreatedBySuperuser)
         cy.get('#logout-button').click()
         cy.login({username: 'mluukkai', password: 'salainen'})
-        const blogCreatedByMatti = {
-          title: 'Blog',
-          author: 'Einstein',
-          url: 'https://www.blog.com'
-        }
         cy.createBlog(blogCreatedByMatti)
         cy.visit('')
       })
 
-      it.only('a user can like a blog', function () {
+      it('a user can like a blog', function () {
         cy.contains('Another Blog').contains('likes: 0')
         cy.contains('Another Blog').contains('view').click().get('#add-like').click()
         cy.contains('Another Blog').contains('likes: 1')
+      })
+
+      it('the user that posted the blog can delete it', function () {
+        cy.contains(`${blogCreatedByMatti.title} by ${blogCreatedByMatti.author}`).contains('delete').click()
+        cy.contains(`${blogCreatedByMatti.title} by ${blogCreatedByMatti.author}`).should('not.exist')
       })
 
     })
