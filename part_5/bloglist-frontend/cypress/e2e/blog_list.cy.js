@@ -95,6 +95,13 @@ describe('Blog list app', function () {
         cy.contains(`${blogCreatedByMatti.title} by ${blogCreatedByMatti.author}`).should('not.exist')
       })
 
+      it('the user can delete only its own posts', function () {
+        cy.contains(`${blogCreatedByMatti.title} by ${blogCreatedByMatti.author}`).contains('delete')
+        cy.contains(`${blogCreatedBySuperuser.title} by ${blogCreatedBySuperuser.author}`)
+            .contains('delete')
+            .should('not.exist')
+      })
+
     })
 
   })
