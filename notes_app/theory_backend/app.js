@@ -5,6 +5,7 @@ import cors from 'cors'
 import notesRouter from './controllers/notes.js'
 import userRouter from './controllers/users.js'
 import loginRouter from './controllers/login.js'
+import testingRouter from './controllers/testing.js'
 import mongoose from 'mongoose'
 import config from './utils/config.js'
 import logger from './utils/logger.js'
@@ -37,6 +38,9 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello World</h1>')
 })
 
+if(process.env.NODE_ENV==='test'){
+    app.use('/api/testing', testingRouter)
+}
 app.use(middleware.unknownEndPoint)
 app.use(middleware.errorHandler)
 

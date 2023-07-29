@@ -164,7 +164,6 @@ describe('creation of a blog', () => {
             author: "Michael Chen",
             url: "https://reactpatterns.com/",
             likes: 12,
-            userId: creator.id
         }
         await api
             .post('/api/blogs')
