@@ -1,3 +1,4 @@
+
 describe('Blog list app', function () {
 
   beforeEach(function () {
@@ -15,6 +16,10 @@ describe('Blog list app', function () {
     cy.contains('username').find('input').should('exist')
     cy.contains('password').find('input').should('exist')
     cy.get('button').should('contain', 'Login')
+  })
+
+  it('Create blog form is not shown', function () {
+    cy.contains('create').should('not.exist')
   })
 
   describe('Login', function () {
@@ -35,6 +40,28 @@ describe('Blog list app', function () {
       cy.contains('Matti Luukkainen logged in')
       cy.get('#logout-button').contains('Logout')
     })
+
+  })
+
+  describe('when logged in', function () {
+    beforeEach(function (){
+      cy.request('POST', `${Cypress.env('BACKEND')}/login`, {username:'mluukkai', password: 'salainen'})
+          .then(response => {
+            localStorage.setItem('loggedUser', JSON.stringify(response.body))
+            cy.visit('')
+          })
+    })
+
+    it('a new note can be created', function () {
+      cy.contains('create new blog').click()
+      cy.get('#title-input').type('Title')
+      cy.get('#author-input').type('Author')
+      cy.get('#url-input').type('https://www.blog.com')
+      cy.get('#create-blog').click()
+      cy.contains("A new blog is created", {exact:false}).should('have.css', 'color', 'rgb(0, 128, 0)')
+    })
+
+
 
   })
 })
