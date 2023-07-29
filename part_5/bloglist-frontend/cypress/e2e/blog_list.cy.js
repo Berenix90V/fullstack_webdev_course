@@ -32,5 +32,13 @@ describe('Blog list app', function () {
           .should('have.css', 'border-style', 'solid')
     })
 
+    it('and login successful with the right credentials', function () {
+      cy.get('#username').type('mluukkai')
+      cy.get('#password').type('salainen')
+      cy.get('#login-button').click()
+      cy.contains('Matti Luukkainen logged in')
+      cy.get('#logout-button').contains('Logout')
+    })
+
   })
 })
