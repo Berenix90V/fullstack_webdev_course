@@ -101,7 +101,46 @@ describe('Blog list app', function () {
             .contains('delete')
             .should('not.exist')
       })
+    })
+    describe('when more blogs exists with different ratings', function () {
+      const blog1 = {
+        title: 'Blog with less likes',
+        author: 'Einstein',
+        url: 'https://www.blog.com',
+        likes: 0
+      }
+      const blog2 = {
+        title: 'Blog with more likes',
+        author: 'Oppenheimer',
+        url: 'https://www.blog.com',
+        likes: 2
+      }
+      const blog3 = {
+        title: 'Blog middle likes',
+        author: 'Heisenberg',
+        url: 'https://www.blog.com',
+        likes: 1
+      }
 
+      beforeEach(function (){
+        cy.createBlog(blog1)
+        cy.createBlog(blog2)
+        cy.createBlog(blog3)
+        cy.visit('')
+      })
+
+      it('blogs are sorted by likes', () => {
+        cy.get('.blog').eq(0).should('contain', 'Blog with more likes')
+        cy.get('.blog').eq(2).should('contain', 'Blog with less likes')
+      })
+
+      it.only('blogs are sorted by likes also after modifying likes', () => {
+        cy.get('.blog').eq(1).contains('view').click()
+        cy.get('.blog').eq(1).contains('like').click()
+        cy.get('.blog').eq(1).contains('like').click()
+        cy.get('.blog').eq(2).should('contain', 'Blog with less likes')
+        cy.get('.blog').eq(0).should('contain', 'Blog middle likes')
+      })
     })
 
   })
