@@ -2,28 +2,24 @@ describe('Blog list app', function () {
 
   beforeEach(function () {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
+    const user = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen'
+    }
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
     cy.visit('')
   })
 
-  it('by default login form is shown', function () {
+  it('Login form is shown', function () {
     cy.contains('username').find('input').should('exist')
     cy.contains('password').find('input').should('exist')
     cy.get('button').should('contain', 'Login')
   })
 
-  describe('when at least one user exist in database', function () {
+  describe('Login', function () {
 
-    beforeEach(function () {
-      const user = {
-        username: 'mluukkai',
-        name: 'Matti Luukkainen',
-        password: 'salainen'
-      }
-      cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
-      cy.visit('')
-    })
-
-    it('and login with not valid credentials', function () {
+    it('fails with wrong credentials', function () {
       cy.get('#username').type('mluukkai')
       cy.get('#password').type('password')
       cy.get('#login-button').click()
@@ -32,7 +28,7 @@ describe('Blog list app', function () {
           .should('have.css', 'border-style', 'solid')
     })
 
-    it('and login successful with the right credentials', function () {
+    it('succeeds with correct credentials', function () {
       cy.get('#username').type('mluukkai')
       cy.get('#password').type('salainen')
       cy.get('#login-button').click()
