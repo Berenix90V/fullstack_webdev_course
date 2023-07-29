@@ -45,11 +45,7 @@ describe('Blog list app', function () {
 
   describe('when logged in', function () {
     beforeEach(function (){
-      cy.request('POST', `${Cypress.env('BACKEND')}/login`, {username:'mluukkai', password: 'salainen'})
-          .then(response => {
-            localStorage.setItem('loggedUser', JSON.stringify(response.body))
-            cy.visit('')
-          })
+      cy.login({username: 'mluukkai', password: 'salainen'})
     })
 
     it('a new blog can be created', function () {
@@ -71,50 +67,28 @@ describe('Blog list app', function () {
         }
         cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
         cy.get('#logout-button').click()
-        cy.request('POST', `${Cypress.env('BACKEND')}/login`, {username:'root', password: 'password'})
-            .then(response => {
-              localStorage.setItem('loggedUser', JSON.stringify(response.body))
-              cy.visit('')
-            })
+        cy.login({username: 'root', password: 'password'})
         const blogCreatedBySuperuser = {
           title: 'Another Blog',
           author: 'Oppenheimer',
           url: 'https://www.blog.com'
         }
-        cy.request({
-          method: 'POST',
-          url:`${Cypress.env('BACKEND')}/blogs`,
-          body: blogCreatedBySuperuser,
-          headers: {
-            Authorization: `Bearer ${JSON.parse(localStorage.getItem('loggedUser')).token}`
-          }
-        } )
+        cy.createBlog(blogCreatedBySuperuser)
         cy.get('#logout-button').click()
-        cy.request('POST', `${Cypress.env('BACKEND')}/login`, {username:'mluukkai', password: 'salainen'})
-            .then(response => {
-              localStorage.setItem('loggedUser', JSON.stringify(response.body))
-              cy.visit('')
-            })
+        cy.login({username: 'mluukkai', password: 'salainen'})
         const blogCreatedByMatti = {
           title: 'Blog',
           author: 'Einstein',
           url: 'https://www.blog.com'
         }
-        cy.request({
-          method: 'POST',
-          url:`${Cypress.env('BACKEND')}/blogs`,
-          body: blogCreatedByMatti,
-          headers: {
-            Authorization: `Bearer ${JSON.parse(localStorage.getItem('loggedUser')).token}`
-          }
-        } )
+        cy.createBlog(blogCreatedByMatti)
         cy.visit('')
       })
 
       it.only('a user can like a blog', function () {
-        cy.get('.blog:first').contains('likes: 0')
-        cy.get('.blog:first').contains('view').click().get('#add-like').click()
-        cy.get('.blog:first').contains('likes: 1')
+        cy.contains('Another Blog').contains('likes: 0')
+        cy.contains('Another Blog').contains('view').click().get('#add-like').click()
+        cy.contains('Another Blog').contains('likes: 1')
       })
 
     })
