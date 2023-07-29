@@ -27,7 +27,7 @@ describe('Blog list app', function () {
       cy.get('#username').type('mluukkai')
       cy.get('#password').type('password')
       cy.get('#login-button').click()
-      cy.contains('Invalid user or password')
+      cy.get('.error').contains('Invalid user or password')
           .should('have.css', 'color', 'rgb(255, 0, 0)')
           .should('have.css', 'border-style', 'solid')
     })
