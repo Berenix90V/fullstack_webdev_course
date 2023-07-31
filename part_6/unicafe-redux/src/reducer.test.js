@@ -1,5 +1,9 @@
 import deepFreeze from 'deep-freeze'
+import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/extend-expect'
 import counterReducer from './reducer'
+
+
 
 describe('unicafe reducer', () => {
   const initialState = {
@@ -86,7 +90,5 @@ describe('unicafe reducer', () => {
       ok: 0,
       bad: 0
     })
-
   })
-
 })
