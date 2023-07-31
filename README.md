@@ -156,3 +156,11 @@ remove it as submodule with the following command>
 git rm --cached 'part_6/unicafe-redux'
 ```
 all the files will get uploaded to be committed. Commit them and it will work.
+
+## Notes about redux testing
+The rerender of the app or component take place only because we are subscribing the rerendering to the store.
+```javascript
+store.subscribe(renderApp)
+```
+if it's not done the app or component doesn't rerender on store change.
+So during the tests we can either rerender it manually or subscribe to the store.
