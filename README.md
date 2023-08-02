@@ -157,6 +157,8 @@ git rm --cached 'part_6/unicafe-redux'
 ```
 all the files will get uploaded to be committed. Commit them and it will work.
 
+if it doesn't ork try with `git add`
+
 ## Notes about redux testing
 The rerender of the app or component take place only because we are subscribing the rerendering to the store.
 ```javascript
