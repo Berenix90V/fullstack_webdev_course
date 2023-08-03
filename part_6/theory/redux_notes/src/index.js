@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import {combineReducers, createStore} from "redux";
 import {Provider} from "react-redux";
 import App from './App.js'
-import noteReducer, {createNote} from "./reducers/noteReducer.js";
-import filterReducer, {filterChange} from "./reducers/filterReducer.js";
+import noteReducer from "./reducers/noteReducer.js";
+import filterReducer from "./reducers/filterReducer.js";
 
 
 const reducer = combineReducers({
@@ -16,17 +16,10 @@ console.log(store.getState())
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
-// const renderApp = () =>{
-//     root.render(<Provider store={store}><App/></Provider>)
-// }
-
 const renderApp = () =>{
-    root.render(<Provider store={store}><div/></Provider>)
+    root.render(<Provider store={store}><App/></Provider>)
 }
 
 renderApp()
 
 store.subscribe(renderApp)
-store.subscribe(() => console.log(store.getState()))
-store.dispatch(filterChange('IMPORTANT'))
-store.dispatch(createNote('combineReducers forms one reducer from many simple reducers'))
