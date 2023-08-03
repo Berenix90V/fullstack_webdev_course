@@ -17,7 +17,7 @@ const Anecdote = ({anecdote, addVote}) => {
 
 const AnecdoteList = () => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(state => state.anecdotes)
     const vote = (id) => {
         dispatch(incrementVoteOf(id))
     }
