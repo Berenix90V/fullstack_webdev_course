@@ -1,11 +1,12 @@
+import {useDispatch} from "react-redux";
+import {filterChange} from "../reducers/filterReducer";
+
 const Filter = () => {
-    const handleOnChange = (event) => {
-        console.log(event.target.value)
-    }
+    const dispatch = useDispatch()
     return(
         <div>
             filter
-            <input type="text" onChange={handleOnChange} />
+            <input type="text" onChange={(event)=>dispatch(filterChange(event.target.value))} />
         </div>
     )
 }
