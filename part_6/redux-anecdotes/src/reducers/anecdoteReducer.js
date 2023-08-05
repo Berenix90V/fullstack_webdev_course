@@ -24,7 +24,7 @@ const anecdoteSlice = createSlice({
             return sortAnecdotes(updatedAnecdotes)
         },
         setAnecdotes(state, action) {
-            return action.payload
+            return sortAnecdotes(action.payload)
         }
     }
 })
