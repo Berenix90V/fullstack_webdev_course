@@ -8,3 +8,7 @@ export const getNotes = () => {
 export const createNote = newNote => {
     return axios.post(`${baseUrl}/notes`, newNote).then(res => res.data)
 }
+
+export const updateNote = updatedNote => {
+    return axios.put(`${baseUrl}/notes/${updatedNote.id}`, updatedNote).then(res => res.data)
+}
