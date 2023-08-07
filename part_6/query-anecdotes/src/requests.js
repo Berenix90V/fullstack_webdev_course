@@ -12,5 +12,11 @@ const createNew = (newAnecdote) => {
     }
 }
 
-const anecdoteServices = {getAll, createNew}
+const updateAnecdote = (updatedAnecdote) => {
+    if(updatedAnecdote.content >= 5){
+        return axios.put(`${baseUrl}/${updatedAnecdote.id}`, updatedAnecdote).then(response=>response.data)
+    }
+}
+
+const anecdoteServices = {getAll, createNew, updateAnecdote}
 export default anecdoteServices
