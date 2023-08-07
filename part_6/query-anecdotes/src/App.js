@@ -5,29 +5,29 @@ import anecdoteServices from "./requests";
 
 const App = () => {
 
-  const handleVote = (anecdote) => {
-    console.log('vote')
-  }
+    const handleVote = (anecdote) => {
+        console.log('vote')
+    }
 
-  const result = useQuery(
-      'notes',
-      anecdoteServices.getAll,
-      {
-        retry: 1
-      }
-  )
-
-  if(result.isLoading){
-    return(
-        <div>data is loading ...</div>
+    const result = useQuery(
+      'anecdotes',
+        anecdoteServices.getAll,
+        {
+            retry: 1
+        }
     )
-  }
 
-  if(result.status === 'error'){
-    return(
-        <div>anecdote service not available due to problems in server</div>
-    )
-  }
+    if(result.isLoading){
+        return(
+            <div>data is loading ...</div>
+        )
+    }
+
+    if(result.status === 'error'){
+        return(
+            <div>anecdote service not available due to problems in server</div>
+        )
+    }
 
   const anecdotes = result.data
 
