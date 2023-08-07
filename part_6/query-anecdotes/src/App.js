@@ -11,12 +11,21 @@ const App = () => {
 
   const result = useQuery(
       'notes',
-      () => axios.get('http://localhost:3001/anecdotes').then(result => result.data)
+      () => axios.get('http://localhost:3001/anecdotes').then(result => result.data),
+      {
+        retry: 1
+      }
   )
 
   if(result.isLoading){
     return(
         <div>data is loading ...</div>
+    )
+  }
+
+  if(result.status === 'error'){
+    return(
+        <div>anecdote service not available due to problems in server</div>
     )
   }
   console.log(result)
