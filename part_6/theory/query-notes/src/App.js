@@ -6,8 +6,9 @@ const App = () => {
   const queryClient = useQueryClient()
 
   const newNoteMutation = useMutation(createNote, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('notes')
+    onSuccess: (newNote) => {
+      const notes = queryClient.getQueryData('notes')
+      queryClient.setQueryData('notes',notes.concat(newNote))
     }
   })
 
