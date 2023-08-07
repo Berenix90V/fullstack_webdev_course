@@ -1,7 +1,7 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import {useQuery} from "react-query";
-import axios from "axios";
+import anecdoteServices from "./requests";
 
 const App = () => {
 
@@ -11,7 +11,7 @@ const App = () => {
 
   const result = useQuery(
       'notes',
-      () => axios.get('http://localhost:3001/anecdotes').then(result => result.data),
+      anecdoteServices.getAll,
       {
         retry: 1
       }
@@ -28,7 +28,7 @@ const App = () => {
         <div>anecdote service not available due to problems in server</div>
     )
   }
-  console.log(result)
+
   const anecdotes = result.data
 
   return (
