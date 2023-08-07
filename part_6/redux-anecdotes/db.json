@@ -34,6 +34,11 @@
       "content": "new anecdote",
       "votes": 0,
       "id": "xbLLHtF"
+    },
+    {
+      "content": "Anecdote added with redux thunk",
+      "votes": 1,
+      "id": "e64NGRA"
     }
   ]
 }
