@@ -1,12 +1,14 @@
-import {useQuery} from "react-query";
-import {getNotes} from "./requests";
+import {useMutation, useQuery} from "react-query";
+import {createNote, getNotes} from "./requests";
+import axios from "axios";
 
 const App = () => {
+  const newNoteMutation = useMutation(createNote)
   const addNote = async (event) => {
     event.preventDefault()
     const content = event.target.note.value
     event.target.note.value = ''
-    console.log(content)
+    newNoteMutation.mutate({ content, important:true })
   }
 
   const toggleImportance = (note) => {
@@ -22,7 +24,6 @@ const App = () => {
         <div>loading data ... </div>
     )
   }
-
   const notes = result.data
 
   return(
