@@ -6,5 +6,11 @@ const getAll =  () => {
     return axios.get(`${baseUrl}`).then(response => response.data)
 }
 
-const anecdoteServices = {getAll}
+const createNew = (newAnecdote) => {
+    if(newAnecdote.content.length >= 5){
+        return axios.post(`${baseUrl}`, newAnecdote).then(response => response.data)
+    }
+}
+
+const anecdoteServices = {getAll, createNew}
 export default anecdoteServices
