@@ -1,8 +1,7 @@
-import CounterContext from "../CounterContext";
-import {useContext} from "react";
+import {useCounterValue} from "../CounterContext";
 
 const Display = () => {
-    const [counter, dispatch] = useContext(CounterContext)
+    const counter = useCounterValue()
     return(
         <div>
             {counter}
