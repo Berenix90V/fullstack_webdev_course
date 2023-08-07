@@ -1,6 +1,5 @@
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import {createNote, getNotes, updateNote} from "./requests";
-import axios from "axios";
 
 const App = () => {
   const queryClient = useQueryClient()
@@ -13,8 +12,9 @@ const App = () => {
   })
 
   const updateNoteMutation = useMutation(updateNote, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('notes')
+    onSuccess: (updatedNote) => {
+      const notes = queryClient.getQueryData('notes')
+      queryClient.setQueryData('notes', notes.map(n => n.id===updatedNote.id? updatedNote : n))
     }
   })
   const addNote = async (event) => {
