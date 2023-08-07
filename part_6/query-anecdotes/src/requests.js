@@ -13,7 +13,7 @@ const createNew = (newAnecdote) => {
 }
 
 const updateAnecdote = (updatedAnecdote) => {
-    if(updatedAnecdote.content >= 5){
+    if(updatedAnecdote.content.length >= 5){
         return axios.put(`${baseUrl}/${updatedAnecdote.id}`, updatedAnecdote).then(response=>response.data)
     }
 }
