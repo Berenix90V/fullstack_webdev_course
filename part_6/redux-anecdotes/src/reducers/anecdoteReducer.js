@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-import anecdotes from "../services/anecdotes";
 import anecdoteService from "../services/anecdotes";
 
 const sortAnecdotes = (anecdotes) => {
