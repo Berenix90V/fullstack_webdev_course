@@ -141,3 +141,28 @@ How to enable ESM on jest: https://jestjs.io/docs/ecmascript-modules
    ```json
    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules pnpx jest"
    ```
+   
+## Notes about git clone in another repo
+after git cloning the repo in the pre-existing repo, delete the folder `.git` and get the submodules:
+```
+git submodule status
+```
+you will get the following error for the just added repo:
+```
+fatal: no submodule mapping found in .gitmodules for path 'part_6/unicafe-redux'
+```
+remove it as submodule with the following command>
+```
+git rm --cached 'part_6/unicafe-redux'
+```
+all the files will get uploaded to be committed. Commit them and it will work.
+
+if it doesn't ork try with `git add`
+
+## Notes about redux testing
+The rerender of the app or component take place only because we are subscribing the rerendering to the store.
+```javascript
+store.subscribe(renderApp)
+```
+if it's not done the app or component doesn't rerender on store change.
+So during the tests we can either rerender it manually or subscribe to the store.
