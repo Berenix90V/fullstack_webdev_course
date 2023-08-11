@@ -1,59 +1,58 @@
-import {useMutation, useQuery, useQueryClient} from "react-query";
-import {createNote, getNotes, updateNote} from "./requests";
+import React from "react";
+import {
+    BrowserRouter as Router,
+    Link, Route, Routes
+} from "react-router-dom";
+
+const Home = () => (
+    <div>
+        <h2>TKTL notes app</h2>
+        <div>
+            Lorem ipsum
+        </div>
+    </div>
+)
+
+const Notes = () => (
+    <div>
+        <h2>Notes</h2>
+        <div>
+            <ul>
+                <li>HTML is easy</li>
+                <li>Browser can execute javascript</li>
+                <li>Browser talks to server with HTML</li>
+            </ul>
+        </div>
+    </div>
+)
+
+const Users = () => (
+    <div>
+        <h2>Users</h2>
+        Users
+    </div>
+)
 
 const App = () => {
-  const queryClient = useQueryClient()
-
-  const newNoteMutation = useMutation(createNote, {
-    onSuccess: (newNote) => {
-      const notes = queryClient.getQueryData('notes')
-      queryClient.setQueryData('notes',notes.concat(newNote))
+    const padding = {
+        padding:5
     }
-  })
 
-  const updateNoteMutation = useMutation(updateNote, {
-    onSuccess: (updatedNote) => {
-      const notes = queryClient.getQueryData('notes')
-      queryClient.setQueryData('notes', notes.map(n => n.id===updatedNote.id? updatedNote : n))
-    }
-  })
-  const addNote = async (event) => {
-    event.preventDefault()
-    const content = event.target.note.value
-    event.target.note.value = ''
-    newNoteMutation.mutate({ content, important:true })
-  }
-
-  const toggleImportance = (note) => {
-    updateNoteMutation.mutate({...note, important: !note.important})
-  }
-
-  const result = useQuery(
-      'notes',
-      getNotes
-  )
-  if(result.isLoading){
-    return(
-        <div>loading data ... </div>
+    return (
+        <Router>
+            <div>
+                <Link style={padding} to="/">home</Link>
+                <Link style={padding} to="/notes">notes</Link>
+                <Link style={padding} to="/users">users</Link>
+            </div>
+            <Routes>
+                <Route path="/notes" element={<Notes/>}/>
+                <Route path="/users" element={<Users/>}/>
+                <Route path="/" element={<Home/>}/>
+            </Routes>
+        </Router>
     )
-  }
-  const notes = result.data
 
-  return(
-    <div>
-      <h2>Notes app</h2>
-      <form onSubmit={addNote}>
-        <input name="note" />
-        <button type="submit">add</button>
-      </form>
-      {notes.map(note =>
-        <li key={note.id} onClick={() => toggleImportance(note)}>
-          {note.content} 
-          <strong> {note.important ? 'important' : ''}</strong>
-        </li>
-      )}
-    </div>
-  )
 }
 
 export default App
