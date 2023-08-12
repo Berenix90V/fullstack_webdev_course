@@ -1,37 +1,37 @@
 import { useState } from 'react'
 
-const useCounter = () => {
-  const [value, setValue] = useState(0)
-
-  const increase = () => {
-    setValue(value+1)
-  }
-
-  const decrease = () => {
-    setValue(value-1)
-  }
-
-  const zero = () => {
-    setValue(0)
-  }
-
-  return{
-    value,
-    increase,
-    decrease,
-    zero
-  }
-}
 const App = () => {
-  const left = useCounter()
-  const right = useCounter()
+  const [name, setName] = useState('')
+  const [born, setBorn] = useState('')
+  const [height, setHeight] = useState('')
 
   return (
     <div>
-      {left.value}
-      <button onClick={left.increase}>left</button>
-      <button onClick={right.increase}>right</button>
-      {right.value}
+      <form>
+        name:
+        <input
+          type='text'
+          value={name}
+          onChange={(event)=>setName(event.target.value)}
+          />
+        <br/>
+        birthdate:
+        <input
+          type='date'
+          value={born}
+          onChange={(event) => setBorn(event.target.value)}
+        />
+        <br/>
+        height:
+        <input
+          type='number'
+          value={height}
+          onChange={(event) => setHeight(event.target.value)}
+        />
+      </form>
+      <di>
+        {name} {born} {height}
+      </di>
     </div>
   )
 }
