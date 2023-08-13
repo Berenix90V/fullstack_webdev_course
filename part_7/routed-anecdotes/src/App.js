@@ -57,9 +57,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content =  useField('text', 'content')
-  const author = useField('text', 'author')
-  const info = useField('text', 'info')
+  const {reset: contentReset, ...content} =  useField('text', 'content')
+  const {reset: authorReset, ...author} = useField('text', 'author')
+  const {reset: infoReset, ...info} = useField('text', 'info')
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
@@ -75,10 +75,9 @@ const CreateNew = (props) => {
 
   const handleReset = (e) => {
     e.preventDefault()
-    content.resetValue()
-    author.resetValue()
-    info.resetValue()
-
+    contentReset()
+    authorReset()
+    infoReset()
   }
 
   return (
@@ -87,15 +86,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name={content.name} value={content.value} onChange={content.onChange} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name={author.name} value={author.value} onChange={author.onChange} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name={info.name} value={info.value} onChange={info.onChange} />
+          <input {...info} />
         </div>
         <button type="submit">create</button><button onClick={handleReset}>reset</button>
       </form>
