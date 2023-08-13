@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import {BrowserRouter as Router, Link, Route, Routes, useMatch, useNavigate} from "react-router-dom";
+import {Link, Route, Routes, useMatch, useNavigate} from "react-router-dom";
 import {useField} from "./hooks";
 
 const Menu = () => {
@@ -73,6 +73,14 @@ const CreateNew = (props) => {
     navigate('/')
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.resetValue()
+    author.resetValue()
+    info.resetValue()
+
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -89,7 +97,7 @@ const CreateNew = (props) => {
           url for more info
           <input name={info.name} value={info.value} onChange={info.onChange} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button><button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
