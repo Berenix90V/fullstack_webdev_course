@@ -1,6 +1,6 @@
 import {Link, Navigate, Route, Routes, useMatch, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {Button, Form, Table} from "react-bootstrap";
+import {Alert, Button, Form, Table} from "react-bootstrap";
 
 const Home = () => (
     <div>
@@ -100,6 +100,7 @@ const App = () => {
     ])
 
     const [user, setUser] = useState(null)
+    const [message, setMessage] = useState(null)
     const match = useMatch('/notes/:id')
     const note = match?
         notes.find(note => note.id === Number(match.params.id))
@@ -107,6 +108,10 @@ const App = () => {
 
     const login = (user) => {
         setUser(user)
+        setMessage(`welcome ${user}`)
+        setTimeout(()=>{
+            setMessage(null)
+        }, 10000)
     }
 
     const padding = {
@@ -115,7 +120,12 @@ const App = () => {
 
     return (
         <div className="container">
-
+            {
+                message &&
+                <Alert variant="success">
+                    {message}
+                </Alert>
+            }
             <div>
                 <Link style={padding} to="/">home</Link>
                 <Link style={padding} to="/notes">notes</Link>
