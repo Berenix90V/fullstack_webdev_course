@@ -8,7 +8,17 @@ import {
     useNavigate,
     useMatch
 } from "react-router-dom"
-import {Container, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
+import {
+    Button,
+    Container,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    TextField
+} from "@mui/material";
 
 
 const Home = () => (
@@ -76,12 +86,14 @@ const Login = (props) => {
             <h2>login</h2>
             <form onSubmit={onSubmit}>
                 <div>
-                    username: <input />
+                    <TextField label="username" />
                 </div>
                 <div>
-                    password: <input type='password' />
+                    <TextField label="password" type='password' />
                 </div>
-                <button type="submit">login</button>
+                <Button variant="contained" color="primary" type="submit">
+                    login
+                </Button>
             </form>
         </div>
     )
