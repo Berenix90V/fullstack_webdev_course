@@ -10,7 +10,7 @@ class App extends React.Component {
   }
 
   render(){
-    if(this.state.anecdotes.length ==0) {
+    if(this.state.anecdotes.length ===0) {
       return <div>no anecdotes ...</div>
     }
     return (
