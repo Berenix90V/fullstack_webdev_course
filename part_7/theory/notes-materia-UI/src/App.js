@@ -9,15 +9,16 @@ import {
     useMatch
 } from "react-router-dom"
 import {
+    Alert, AppBar,
     Button,
-    Container,
+    Container, IconButton,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableRow,
-    TextField
+    TextField, Toolbar
 } from "@mui/material";
 
 
@@ -122,6 +123,7 @@ const App = () => {
     ])
 
     const [user, setUser] = useState(null)
+    const [message, setMessage] = useState(null)
 
     const match = useMatch('/notes/:id')
 
@@ -132,23 +134,41 @@ const App = () => {
 
     const login = (user) => {
         setUser(user)
-    }
-
-    const padding = {
-        padding: 5
+        setMessage(`welcome ${user}`)
+        setTimeout(()=>{
+            setMessage(null)
+        }, 5000)
     }
 
     return (
         <Container>
-            <div>
-                <Link style={padding} to="/">home</Link>
-                <Link style={padding} to="/notes">notes</Link>
-                <Link style={padding} to="/users">users</Link>
-                {user
-                    ? <em>{user} logged in</em>
-                    : <Link style={padding} to="/login">login</Link>
-                }
-            </div>
+            {
+                message &&
+                <Alert severity="success">
+                    {message}
+                </Alert>
+            }
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" aria-label="menu">
+                    </IconButton>
+                    <Button color="inherit" component={Link} to="/">
+                       home
+                    </Button>
+                    <Button color="inherit" component={Link} to="/notes">
+                       notes
+                    </Button>
+                    <Button color="inherit" component={Link} to="/users">
+                        users
+                    </Button>
+
+                        {user
+                            ? <em>{user} logged in</em>
+                            :  <Button color="inherit" component={Link} to="/login">login</Button>
+                        }
+                </Toolbar>
+            </AppBar>
+
             <Routes>
                 <Route path="/notes/:id" element={<Note note={note} />} />
                 <Route path="/notes" element={<Notes notes={notes} />} />
