@@ -1,16 +1,14 @@
-import ReactDOM from 'react-dom/client'
 import { useState } from 'react'
 
 import {
-    BrowserRouter as Router,
     Routes,
     Route,
     Link,
     Navigate,
-    useParams,
     useNavigate,
     useMatch
 } from "react-router-dom"
+import {Container, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
 
 
 const Home = () => (
@@ -34,13 +32,22 @@ const Note = ({ note }) => {
 const Notes = ({ notes }) => (
     <div>
         <h2>Notes</h2>
-        <ul>
-            {notes.map(note =>
-                <li key={note.id}>
-                    <Link to={`/notes/${note.id}`}>{note.content}</Link>
-                </li>
-            )}
-        </ul>
+        <TableContainer component={Paper}>
+            <Table>
+                <TableBody>
+                    {notes.map(note=>(
+                        <TableRow key={note.id}>
+                            <TableCell>
+                                <Link to={`/notes/${note.id}`}>{note.content}</Link>
+                            </TableCell>
+                            <TableCell>
+                                {note.user}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     </div>
 )
 
@@ -120,7 +127,7 @@ const App = () => {
     }
 
     return (
-        <div>
+        <Container>
             <div>
                 <Link style={padding} to="/">home</Link>
                 <Link style={padding} to="/notes">notes</Link>
@@ -141,7 +148,7 @@ const App = () => {
                 <br />
                 <em>Note app, Department of Computer Science 2022</em>
             </div>
-        </div>
+        </Container>
     )
 }
 
