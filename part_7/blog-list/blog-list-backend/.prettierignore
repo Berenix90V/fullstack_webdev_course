@@ -1,0 +1,7 @@
+build
+node-modules
+.env
+*.config.js
+*.json
+*.md
+*.yaml

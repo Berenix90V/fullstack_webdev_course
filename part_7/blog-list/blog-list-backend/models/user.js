@@ -1,28 +1,30 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        minLength: 3
+        minLength: 3,
     },
     name: String,
     passwordHash: String,
-    blogs: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Blog'
-    }]
-})
+    blogs: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Blog",
+        },
+    ],
+});
 
-userSchema.set('toJSON', {
+userSchema.set("toJSON", {
     transform: (document, returnedObject) => {
-        returnedObject.id = document._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-        delete returnedObject.passwordHash
-    }
-})
+        returnedObject.id = document._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+        delete returnedObject.passwordHash;
+    },
+});
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model("User", userSchema);
 
-export default User
+export default User;
