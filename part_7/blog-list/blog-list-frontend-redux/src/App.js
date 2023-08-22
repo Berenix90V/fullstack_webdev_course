@@ -6,15 +6,17 @@ import LoginForm from './components/LoginForm'
 import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import {useDispatch} from "react-redux";
+import {setNotification, unsetNotification} from "./reducers/notificationReducer";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
-
-    const [notification, setNotification] = useState('')
-    const [notificationType, setNotificationType] = useState('')
+    const dispatch = useDispatch()
+    // const [notification, setNotification] = useState('')
+    // const [notificationType, setNotificationType] = useState('')
 
     const blogFormRef = useRef()
 
@@ -48,11 +50,15 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch (error) {
-            setNotification('Invalid user or password')
-            setNotificationType('error')
+            // setNotification('Invalid user or password')
+            // setNotificationType('error')
+            dispatch(setNotification({
+                message: 'Invalid user or password',
+                type: 'error'
+            }))
+
             setTimeout(() => {
-                setNotification('')
-                setNotificationType('')
+                dispatch(unsetNotification())
             }, 5000)
             console.log('Login Error: ', error.message)
         }
@@ -75,13 +81,13 @@ const App = () => {
             console.log(createdBlog)
             const updatedBlogs = await blogService.getAll()
             setBlogs(updatedBlogs)
-            setNotification(
-                `A new blog is created: ${createdBlog.title} by ${createdBlog.author}`,
-            )
-            setNotificationType('success')
+            dispatch(setNotification({
+                message: `A new blog is created: ${createdBlog.title} by ${createdBlog.author}`,
+                type: 'success'
+            }))
+
             setTimeout(() => {
-                setNotification('')
-                setNotificationType('')
+                dispatch(unsetNotification())
             }, 5000)
         }
     }
@@ -140,10 +146,7 @@ const App = () => {
         return (
             <>
                 <h2>blogs</h2>
-                <Notification
-                    message={notification}
-                    className={notificationType}
-                />
+                <Notification/>
                 <LoginForm
                     handleLogin={handleLogin}
                     username={username}
