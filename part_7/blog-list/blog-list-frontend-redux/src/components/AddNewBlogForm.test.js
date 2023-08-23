@@ -1,6 +1,5 @@
 import React from 'react'
-import Blog from './Blog'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import '@testing-library/jest-dom/extend-expect'
 import userEvent from '@testing-library/user-event'
@@ -10,11 +9,6 @@ describe('BlogForm component', () => {
     let renderResult
     const mockCreateBlog = jest.fn()
     beforeEach(() => {
-        const blog = {
-            title: 'Title',
-            author: 'author',
-            url: 'https://www.blog.com',
-        }
         renderResult = render(<AddNewBlogForm createBlog={mockCreateBlog} />)
     })
 

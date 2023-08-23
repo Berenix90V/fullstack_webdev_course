@@ -45,6 +45,7 @@ describe('<Blog/>', () => {
     test('renders url and likes if the user click the button to expand the information', async () => {
         const moreInfoDivBefore =
             renderResult.container.querySelector('.additional-info')
+        expect(moreInfoDivBefore).toHaveStyle({ display: 'none' })
         const expandButton =
             renderResult.container.querySelector('#expand-button')
         const user = userEvent.setup()

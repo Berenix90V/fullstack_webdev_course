@@ -6,8 +6,11 @@ import LoginForm from './components/LoginForm'
 import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import {useDispatch} from "react-redux";
-import {setNotification, unsetNotification} from "./reducers/notificationReducer";
+import { useDispatch } from 'react-redux'
+import {
+    setNotification,
+    unsetNotification,
+} from './reducers/notificationReducer'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -52,10 +55,12 @@ const App = () => {
         } catch (error) {
             // setNotification('Invalid user or password')
             // setNotificationType('error')
-            dispatch(setNotification({
-                message: 'Invalid user or password',
-                type: 'error'
-            }))
+            dispatch(
+                setNotification({
+                    message: 'Invalid user or password',
+                    type: 'error',
+                }),
+            )
 
             setTimeout(() => {
                 dispatch(unsetNotification())
@@ -81,10 +86,12 @@ const App = () => {
             console.log(createdBlog)
             const updatedBlogs = await blogService.getAll()
             setBlogs(updatedBlogs)
-            dispatch(setNotification({
-                message: `A new blog is created: ${createdBlog.title} by ${createdBlog.author}`,
-                type: 'success'
-            }))
+            dispatch(
+                setNotification({
+                    message: `A new blog is created: ${createdBlog.title} by ${createdBlog.author}`,
+                    type: 'success',
+                }),
+            )
 
             setTimeout(() => {
                 dispatch(unsetNotification())
@@ -123,10 +130,7 @@ const App = () => {
                         Logout
                     </button>
                 </p>
-                <Notification
-                    message={notification}
-                    className={notificationType}
-                />
+                <Notification/>
                 <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
                     <AddNewBlogForm createBlog={addNewBlog} />
                 </Togglable>
@@ -146,7 +150,7 @@ const App = () => {
         return (
             <>
                 <h2>blogs</h2>
-                <Notification/>
+                <Notification />
                 <LoginForm
                     handleLogin={handleLogin}
                     username={username}
