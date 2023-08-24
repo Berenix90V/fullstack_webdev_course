@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotificationForAnIntervalOfTime } from './reducers/notificationReducer'
-import { addNewBlog, initializeBlogs, updateBlog } from './reducers/blogReducer'
+import { addNewBlog, initializeBlogs, removeBlog, updateBlog } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 
 const App = () => {
@@ -58,15 +58,12 @@ const App = () => {
         }
     }
 
-    const removeBlog = async (blogId) => {
-        console.log(blogId)
-        // try {
-        //     await blogService.remove(blogId)
-        //     const updatedBlogs = await blogService.getAll()
-        //     setBlogs(updatedBlogs)
-        // } catch (error) {
-        //     console.log(error.message)
-        // }
+    const handleRemoveBlog = async (blogId) => {
+        try {
+            dispatch(removeBlog(blogId))
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     if (user) {
@@ -90,7 +87,7 @@ const App = () => {
                         blog={blog}
                         userId={user.id}
                         updateBlog={handleUpdateBlog}
-                        removeBlog={removeBlog}
+                        removeBlog={handleRemoveBlog}
                     />
                 ))}
             </div>

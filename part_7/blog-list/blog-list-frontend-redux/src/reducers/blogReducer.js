@@ -41,4 +41,12 @@ export const updateBlog = (blogObject) => {
         dispatch(setBlogs(updatedBlogs))
     }
 }
+
+export const removeBlog = (blogId) => {
+    return async dispatch => {
+        await blogService.remove(blogId)
+        const updatedBlogs = await blogService.getAll()
+        dispatch(setBlogs(updatedBlogs))
+    }
+}
 export default blogSlice.reducer
