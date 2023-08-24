@@ -11,7 +11,7 @@ import {
     setNotification,
     unsetNotification,
 } from './reducers/notificationReducer'
-import { initializeBlogs } from './reducers/blogReducer'
+import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
     const blogs = useSelector(state => state.blogs)
@@ -71,22 +71,21 @@ const App = () => {
             console.log('Logout Error: ', error.message)
         }
     }
-    const addNewBlog = async (blogObject) => {
+    const handleBlogCreation = async (blogObject) => {
         blogFormRef.current.toggleVisibility()
-        const createdBlog = await blogService.create(blogObject)
-        if (createdBlog) {
-            console.log(createdBlog)
-            //const updatedBlogs = await blogService.getAll()
-            // setBlogs(updatedBlogs)
+        try{
+            dispatch(addNewBlog(blogObject))
             dispatch(
                 setNotification({
-                    message: `A new blog is created: ${createdBlog.title} by ${createdBlog.author}`,
+                    message: `A new blog is created: ${blogObject.title} by ${blogObject.author}`,
                     type: 'success',
                 }),
             )
             setTimeout(() => {
                 dispatch(unsetNotification())
             }, 5000)
+        } catch(error){
+            console.log(error.message)
         }
     }
 
@@ -125,7 +124,7 @@ const App = () => {
                 </p>
                 <Notification/>
                 <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
-                    <AddNewBlogForm createBlog={addNewBlog} />
+                    <AddNewBlogForm createBlog={handleBlogCreation} />
                 </Togglable>
 
                 {blogs.map((blog) => (
