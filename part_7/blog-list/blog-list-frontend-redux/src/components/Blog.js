@@ -10,8 +10,8 @@ const Blog = ({ blog, userId, updateBlog, removeBlog }) => {
     }
 
     const updateLikes = async () => {
-        blog.likes += 1
-        await updateBlog(blog)
+        const updatedBlog = { ...blog, likes: blog.likes+1 }
+        await updateBlog(updatedBlog)
     }
     const deleteBlog = async () => {
         const blogId = blog.id

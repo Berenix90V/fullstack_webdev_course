@@ -7,15 +7,12 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotificationForAnIntervalOfTime } from './reducers/notificationReducer'
-import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
+import { addNewBlog, initializeBlogs, updateBlog } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 
 const App = () => {
     const blogs = useSelector(state => state.blogs)
     const user = useSelector(state => state.user)
-    //const [user, setUser] = useState(null)
-    // const [username, setUsername] = useState('')
-    // const [password, setPassword] = useState('')
     const dispatch = useDispatch()
 
     const blogFormRef = useRef()
@@ -53,16 +50,12 @@ const App = () => {
         }
     }
 
-    const updateBlog = async (blogObject) => {
-        console.log(blogObject)
-        // try {
-        //     await blogService.update(blogObject)
-        //     const updatedBlogs = await blogService.getAll()
-        //     updatedBlogs.sort((a, b) => b.likes - a.likes)
-        //     setBlogs(updatedBlogs)
-        // } catch (error) {
-        //     console.log(error.message)
-        // }
+    const handleUpdateBlog = async (blogObject) => {
+        try {
+            dispatch(updateBlog(blogObject))
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     const removeBlog = async (blogId) => {
@@ -96,7 +89,7 @@ const App = () => {
                         key={blog.id}
                         blog={blog}
                         userId={user.id}
-                        updateBlog={updateBlog}
+                        updateBlog={handleUpdateBlog}
                         removeBlog={removeBlog}
                     />
                 ))}

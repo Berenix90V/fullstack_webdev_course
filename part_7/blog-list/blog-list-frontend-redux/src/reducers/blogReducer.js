@@ -32,4 +32,13 @@ export const addNewBlog = (content) => {
         dispatch(createBlog(newBlog))
     }
 }
+
+export const updateBlog = (blogObject) => {
+    return async dispatch => {
+        await blogService.update(blogObject)
+        const updatedBlogs = await blogService.getAll()
+        updatedBlogs.sort((a, b) => b.likes - a.likes)
+        dispatch(setBlogs(updatedBlogs))
+    }
+}
 export default blogSlice.reducer
