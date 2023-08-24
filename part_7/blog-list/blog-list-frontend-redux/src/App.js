@@ -7,10 +7,7 @@ import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-    setNotification,
-    unsetNotification,
-} from './reducers/notificationReducer'
+import { setNotificationForAnIntervalOfTime } from './reducers/notificationReducer'
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
@@ -45,18 +42,10 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch (error) {
-            // setNotification('Invalid user or password')
-            // setNotificationType('error')
-            dispatch(
-                setNotification({
-                    message: 'Invalid user or password',
-                    type: 'error',
-                }),
-            )
-
-            setTimeout(() => {
-                dispatch(unsetNotification())
-            }, 5000)
+            dispatch(setNotificationForAnIntervalOfTime({
+                message: 'Invalid user or password',
+                type: 'error',
+            }, 5000))
             console.log('Login Error: ', error.message)
         }
     }
@@ -75,15 +64,10 @@ const App = () => {
         blogFormRef.current.toggleVisibility()
         try{
             dispatch(addNewBlog(blogObject))
-            dispatch(
-                setNotification({
-                    message: `A new blog is created: ${blogObject.title} by ${blogObject.author}`,
-                    type: 'success',
-                }),
-            )
-            setTimeout(() => {
-                dispatch(unsetNotification())
-            }, 5000)
+            dispatch(setNotificationForAnIntervalOfTime({
+                message: `A new blog is created: ${blogObject.title} by ${blogObject.author}`,
+                type: 'success',
+            }, 5000))
         } catch(error){
             console.log(error.message)
         }
