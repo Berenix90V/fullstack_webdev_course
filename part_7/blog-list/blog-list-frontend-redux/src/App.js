@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
@@ -9,12 +8,14 @@ import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotificationForAnIntervalOfTime } from './reducers/notificationReducer'
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
+import { setUser, userLogout } from './reducers/loginReducer'
 
 const App = () => {
     const blogs = useSelector(state => state.blogs)
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null)
+    const user = useSelector(state => state.user)
+    //const [user, setUser] = useState(null)
+    // const [username, setUsername] = useState('')
+    // const [password, setPassword] = useState('')
     const dispatch = useDispatch()
 
     const blogFormRef = useRef()
@@ -27,35 +28,14 @@ const App = () => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
-            setUser(user)
+            dispatch(setUser(user))
             blogService.setToken(user.token)
         }
     }, [])
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
+    const handleLogout = () => {
         try {
-            const user = await loginService.login({ username, password })
-            setUser(user)
-            blogService.setToken(user.token)
-            window.localStorage.setItem('loggedUser', JSON.stringify(user))
-            setUsername('')
-            setPassword('')
-        } catch (error) {
-            dispatch(setNotificationForAnIntervalOfTime({
-                message: 'Invalid user or password',
-                type: 'error',
-            }, 5000))
-            console.log('Login Error: ', error.message)
-        }
-    }
-
-    const handleLogout = (event) => {
-        event.preventDefault()
-        try {
-            window.localStorage.removeItem('loggedUser')
-            setUser(null)
-            blogService.setToken(null)
+            dispatch(userLogout())
         } catch (error) {
             console.log('Logout Error: ', error.message)
         }
@@ -127,13 +107,7 @@ const App = () => {
             <>
                 <h2>blogs</h2>
                 <Notification />
-                <LoginForm
-                    handleLogin={handleLogin}
-                    username={username}
-                    password={password}
-                    setUsername={setUsername}
-                    setPassword={setPassword}
-                />
+                <LoginForm />
             </>
         )
     }
