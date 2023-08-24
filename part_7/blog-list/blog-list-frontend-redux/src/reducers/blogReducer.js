@@ -46,6 +46,7 @@ export const removeBlog = (blogId) => {
     return async dispatch => {
         await blogService.remove(blogId)
         const updatedBlogs = await blogService.getAll()
+        updatedBlogs.sort((a, b) => b.likes - a.likes)
         dispatch(setBlogs(updatedBlogs))
     }
 }
