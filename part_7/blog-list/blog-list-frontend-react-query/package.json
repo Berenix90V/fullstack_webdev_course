@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tanstack/react-query": "^4.33.0",
     "axios": "^1.2.3",
     "http-proxy-middleware": "^2.0.6",
     "jest": "^29.6.1",
