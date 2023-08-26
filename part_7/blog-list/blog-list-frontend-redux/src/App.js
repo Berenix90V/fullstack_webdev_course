@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setNotificationForAnIntervalOfTime } from './reducers/notificationReducer'
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
+import LogoutButton from './components/LogoutButton'
 
 const App = () => {
     const blogs = useSelector(state => state.blogs)
@@ -50,18 +51,11 @@ const App = () => {
         }
     }
 
-
-
     if (user) {
         return (
             <div>
                 <h2>blogs</h2>
-                <p>
-                    {user.name} logged in{' '}
-                    <button onClick={handleLogout} id="logout-button">
-                        Logout
-                    </button>
-                </p>
+                <LogoutButton username={user.name} handleLogout={handleLogout} />
                 <Notification/>
                 <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
                     <AddNewBlogForm createBlog={handleBlogCreation} />
@@ -80,7 +74,6 @@ const App = () => {
         return (
             <>
                 <h2>blogs</h2>
-                <Notification />
                 <LoginForm />
             </>
         )
