@@ -1,23 +1,19 @@
-import { useState, useEffect, useRef } from 'react'
+import { useRef, useContext } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { useNotificationDispatch } from './contexts/NotificationContext'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import LoginContext from './contexts/LoginContext'
+import { useNotificationDispatch } from './contexts/NotificationContext'
 
 const App = () => {
     const queryClient = useQueryClient()
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null)
     const notificationDispatch = useNotificationDispatch()
-
+    const [user, userDispatch] = useContext(LoginContext)
     const blogFormRef = useRef()
-
     const result = useQuery({
         queryKey: ['blogs'],
         queryFn: blogService.getAll
@@ -76,57 +72,11 @@ const App = () => {
         onError: error => console.log(error.message)
     })
 
-    useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedUser')
-        if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON)
-            setUser(user)
-            blogService.setToken(user.token)
-        }
-    }, [])
-
-    // end of hooks
-
     if(result.isLoading){
         return <div>loading data...</div>
     }
     const blogs = result.data
     blogs.sort((a, b) => b.likes - a.likes)
-
-    const handleLogin = async (event) => {
-        event.preventDefault()
-        try {
-            const user = await loginService.login({ username, password })
-            setUser(user)
-            blogService.setToken(user.token)
-            window.localStorage.setItem('loggedUser', JSON.stringify(user))
-            setUsername('')
-            setPassword('')
-        } catch (error) {
-            notificationDispatch({
-                type: 'setNotification',
-                payload: {
-                    message: 'Invalid user or password',
-                    type: 'error'
-                }
-            })
-            setTimeout(() => {
-                notificationDispatch({ type: 'unsetNotification' })
-            }, 5000)
-            console.log('Login Error: ', error.message)
-        }
-    }
-
-    const handleLogout = (event) => {
-        event.preventDefault()
-        try {
-            window.localStorage.removeItem('loggedUser')
-            setUser(null)
-            blogService.setToken(null)
-        } catch (error) {
-            console.log('Logout Error: ', error.message)
-        }
-    }
 
     const addNewBlog = async (blogObject) => {
         blogFormRef.current.toggleVisibility()
@@ -139,6 +89,16 @@ const App = () => {
 
     const removeBlog = async (blogId) => {
         deleteBlogMutation.mutate(blogId)
+    }
+
+    const handleLogout = () => {
+        userDispatch({ type: 'unsetUser' })
+        try {
+            window.localStorage.removeItem('loggedUser')
+            blogService.setToken(null)
+        } catch (error) {
+            console.log('Logout Error: ', error.message)
+        }
     }
 
     if (user) {
@@ -172,13 +132,7 @@ const App = () => {
             <>
                 <h2>blogs</h2>
                 <Notification />
-                <LoginForm
-                    handleLogin={handleLogin}
-                    username={username}
-                    password={password}
-                    setUsername={setUsername}
-                    setPassword={setPassword}
-                />
+                <LoginForm />
             </>
         )
     }
