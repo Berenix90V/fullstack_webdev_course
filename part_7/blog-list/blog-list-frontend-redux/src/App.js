@@ -77,12 +77,12 @@ const App = () => {
                 <h2>blogs</h2>
                 <LogoutButton username={user.name} handleLogout={handleLogout} />
                 <Notification/>
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />} />
-                        <Route path="/users" element={<Users />}/>
-                    </Routes>
-                </Router>
+
+                <Routes>
+                    <Route path="/" element={<Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />} />
+                    <Route path="/users" element={<Users />}/>
+                </Routes>
+
 
 
             </div>
