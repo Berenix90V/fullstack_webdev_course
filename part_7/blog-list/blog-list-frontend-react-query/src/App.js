@@ -56,6 +56,19 @@ const App = () => {
         }
     })
 
+    const updateBlogMutation = useMutation(blogService.update, {
+        onSuccess: (updatedBlog => {
+            const blogs = queryClient.getQueryData(['blogs'])
+            const id = updatedBlog.id
+            const updatedBlogs = blogs.map(blog => blog.id===id? updatedBlog : blog )
+            updatedBlogs.sort((a,b) => b.likes-a.likes)
+            queryClient.setQueryData(['blogs'], updatedBlogs)
+        }),
+        onError: error => {
+            console.log(error.message)
+        }
+    })
+
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
         if (loggedUserJSON) {
@@ -114,15 +127,7 @@ const App = () => {
     }
 
     const updateBlog = async (blogObject) => {
-        console.log(blogObject)
-        // try {
-        //     await blogService.update(blogObject)
-        //     const updatedBlogs = await blogService.getAll()
-        //     updatedBlogs.sort((a, b) => b.likes - a.likes)
-        //     setBlogs(updatedBlogs)
-        // } catch (error) {
-        //     console.log(error.message)
-        // }
+        updateBlogMutation.mutate(blogObject)
     }
 
     const removeBlog = async (blogId) => {
