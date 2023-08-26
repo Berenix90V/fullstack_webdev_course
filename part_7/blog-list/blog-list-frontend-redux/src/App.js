@@ -11,6 +11,24 @@ import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 import LogoutButton from './components/LogoutButton'
 
+const Home = ({ user, blogs, blogFormRef, handleBlogCreation }) => {
+    return (
+        <>
+            <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
+                <AddNewBlogForm createBlog={handleBlogCreation} />
+            </Togglable>
+
+            {blogs.map((blog) => (
+                <Blog
+                    key={blog.id}
+                    blog={blog}
+                    userId={user.id}
+                />
+            ))}
+        </>
+    )
+}
+
 const App = () => {
     const blogs = useSelector(state => state.blogs)
     const user = useSelector(state => state.user)
@@ -57,25 +75,16 @@ const App = () => {
                 <h2>blogs</h2>
                 <LogoutButton username={user.name} handleLogout={handleLogout} />
                 <Notification/>
-                <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
-                    <AddNewBlogForm createBlog={handleBlogCreation} />
-                </Togglable>
+                <Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />
 
-                {blogs.map((blog) => (
-                    <Blog
-                        key={blog.id}
-                        blog={blog}
-                        userId={user.id}
-                    />
-                ))}
             </div>
         )
     } else {
         return (
-            <>
+            <div>
                 <h2>blogs</h2>
                 <LoginForm />
-            </>
+            </div>
         )
     }
 }
