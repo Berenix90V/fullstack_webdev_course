@@ -7,29 +7,16 @@ import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useNotificationDispatch } from './contexts/NotificationContext'
+import { useQuery } from '@tanstack/react-query'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
+    //const queryClient = useQueryClient()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
-
-    // const [notification, setNotification] = useState('')
-    // const [notificationType, setNotificationType] = useState('')
     const notificationDispatch = useNotificationDispatch()
 
     const blogFormRef = useRef()
-
-    useEffect(() => {
-        const getBlogs = async () => {
-            const allBlogs = await blogService.getAll()
-            allBlogs.sort((a, b) => b.likes - a.likes)
-            if (allBlogs.length > 0) {
-                setBlogs(allBlogs)
-            }
-        }
-        getBlogs()
-    }, [])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -39,6 +26,18 @@ const App = () => {
             blogService.setToken(user.token)
         }
     }, [])
+
+    const result = useQuery({
+        queryKey: ['blogs'],
+        queryFn: blogService.getAll
+    })
+
+    if(result.isLoading){
+        return <div>loading data...</div>
+    }
+
+    const blogs = result.data
+    console.log(blogs)
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -79,8 +78,8 @@ const App = () => {
         const createdBlog = await blogService.create(blogObject)
         if (createdBlog) {
             console.log(createdBlog)
-            const updatedBlogs = await blogService.getAll()
-            setBlogs(updatedBlogs)
+            // const updatedBlogs = await blogService.getAll()
+            // setBlogs(updatedBlogs)
             notificationDispatch({
                 type: 'setNotification',
                 payload: {
@@ -96,24 +95,26 @@ const App = () => {
     }
 
     const updateBlog = async (blogObject) => {
-        try {
-            await blogService.update(blogObject)
-            const updatedBlogs = await blogService.getAll()
-            updatedBlogs.sort((a, b) => b.likes - a.likes)
-            setBlogs(updatedBlogs)
-        } catch (error) {
-            console.log(error.message)
-        }
+        console.log(blogObject)
+        // try {
+        //     await blogService.update(blogObject)
+        //     const updatedBlogs = await blogService.getAll()
+        //     updatedBlogs.sort((a, b) => b.likes - a.likes)
+        //     setBlogs(updatedBlogs)
+        // } catch (error) {
+        //     console.log(error.message)
+        // }
     }
 
     const removeBlog = async (blogId) => {
-        try {
-            await blogService.remove(blogId)
-            const updatedBlogs = await blogService.getAll()
-            setBlogs(updatedBlogs)
-        } catch (error) {
-            console.log(error.message)
-        }
+        console.log(blogId)
+        // try {
+        //     await blogService.remove(blogId)
+        //     const updatedBlogs = await blogService.getAll()
+        //     setBlogs(updatedBlogs)
+        // } catch (error) {
+        //     console.log(error.message)
+        // }
     }
 
     if (user) {
