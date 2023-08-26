@@ -69,6 +69,13 @@ const App = () => {
         }
     })
 
+    const deleteBlogMutation = useMutation(blogService.remove, {
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['blogs'] })
+        },
+        onError: error => console.log(error.message)
+    })
+
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
         if (loggedUserJSON) {
@@ -131,14 +138,7 @@ const App = () => {
     }
 
     const removeBlog = async (blogId) => {
-        console.log(blogId)
-        // try {
-        //     await blogService.remove(blogId)
-        //     const updatedBlogs = await blogService.getAll()
-        //     setBlogs(updatedBlogs)
-        // } catch (error) {
-        //     console.log(error.message)
-        // }
+        deleteBlogMutation.mutate(blogId)
     }
 
     if (user) {
