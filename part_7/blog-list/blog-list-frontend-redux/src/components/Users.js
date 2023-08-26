@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom'
 const User = ({ user }) => {
     const blogs = user.blogs.length
     return (
         <tr>
-            <td>{user.name}</td>
+            <td><Link to={`/users/${user.id}`} >{user.name}</Link></td>
             <td>{blogs}</td>
         </tr>
     )
