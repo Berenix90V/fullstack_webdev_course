@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 
@@ -8,6 +7,12 @@ const Blog = ({ blog, userId }) => {
     const hideWhenVisible = { display: visibleDetails ? 'none' : '' }
     const showWhenVisible = { display: visibleDetails ? '' : 'none' }
     const dispatch = useDispatch()
+
+    if(!blog){
+        return (
+            <div>loading data</div>
+        )
+    }
     const toggleVisibility = () => {
         setVisibleDetails(!visibleDetails)
     }
@@ -64,11 +69,6 @@ const Blog = ({ blog, userId }) => {
             )}
         </div>
     )
-}
-
-Blog.propTypes = {
-    blog: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
 }
 
 export default Blog

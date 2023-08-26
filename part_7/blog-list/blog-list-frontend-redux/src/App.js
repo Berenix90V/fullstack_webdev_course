@@ -15,9 +15,9 @@ import Users from './components/Users'
 import userService from './services/users'
 import SingleUser from './components/SingleUser'
 
-const Home = ({ user }) => {
+const Home = ({ user, blogs }) => {
     const blogFormRef = useRef()
-    const blogs = useSelector(state => state.blogs)
+    //const blogs = useSelector(state => state.blogs)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -57,6 +57,7 @@ const Home = ({ user }) => {
 const App = () => {
     const user = useSelector(state => state.user)
     const [users, setUsers] = useState([])
+    const blogs = useSelector(state => state.blogs)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -67,8 +68,11 @@ const App = () => {
         initializeUsers()
     },[])
 
-    const match = useMatch('/users/:id')
-    const visualizedUser = match? users.find(u => u.id===match.params.id) : null
+    const userMatch = useMatch('/users/:id')
+    const visualizedUser = userMatch? users.find(u => u.id===userMatch.params.id) : null
+
+    const blogMatch = useMatch('/blogs/:id')
+    const visualizedBlog = blogMatch? blogs.find(b => b.id===blogMatch.params.id) : null
 
 
     useEffect(() => {
@@ -100,6 +104,7 @@ const App = () => {
                     <Route path="/" element={<Home user={user} />} />
                     <Route path="/users" element={<Users users={users} />}/>
                     <Route path="/users/:id" element={<SingleUser user={visualizedUser} />} />
+                    <Route path="/blogs/:id" element={<Blog blog={visualizedBlog} userId={user.id} />}/>
                 </Routes>
 
 
