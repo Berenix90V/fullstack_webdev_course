@@ -10,10 +10,31 @@ import { setNotificationForAnIntervalOfTime } from './reducers/notificationReduc
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 import LogoutButton from './components/LogoutButton'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Users from './components/Users'
 
-const Home = ({ user, blogs, blogFormRef, handleBlogCreation }) => {
+const Home = ({ user }) => {
+    const blogFormRef = useRef()
+    const blogs = useSelector(state => state.blogs)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(initializeBlogs())
+    }, [])
+
+    const handleBlogCreation = async (blogObject) => {
+        blogFormRef.current.toggleVisibility()
+        try{
+            dispatch(addNewBlog(blogObject))
+            dispatch(setNotificationForAnIntervalOfTime({
+                message: `A new blog is created: ${blogObject.title} by ${blogObject.author}`,
+                type: 'success',
+            }, 5000))
+        } catch(error){
+            console.log(error.message)
+        }
+    }
+
     return (
         <>
             <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
@@ -32,15 +53,8 @@ const Home = ({ user, blogs, blogFormRef, handleBlogCreation }) => {
 }
 
 const App = () => {
-    const blogs = useSelector(state => state.blogs)
     const user = useSelector(state => state.user)
     const dispatch = useDispatch()
-
-    const blogFormRef = useRef()
-
-    useEffect(() => {
-        dispatch(initializeBlogs())
-    }, [])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -58,18 +72,7 @@ const App = () => {
             console.log('Logout Error: ', error.message)
         }
     }
-    const handleBlogCreation = async (blogObject) => {
-        blogFormRef.current.toggleVisibility()
-        try{
-            dispatch(addNewBlog(blogObject))
-            dispatch(setNotificationForAnIntervalOfTime({
-                message: `A new blog is created: ${blogObject.title} by ${blogObject.author}`,
-                type: 'success',
-            }, 5000))
-        } catch(error){
-            console.log(error.message)
-        }
-    }
+
 
     if (user) {
         return (
@@ -79,7 +82,7 @@ const App = () => {
                 <Notification/>
 
                 <Routes>
-                    <Route path="/" element={<Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />} />
+                    <Route path="/" element={<Home user={user} />} />
                     <Route path="/users" element={<Users />}/>
                 </Routes>
 
