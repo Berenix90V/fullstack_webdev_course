@@ -10,6 +10,7 @@ import { setNotificationForAnIntervalOfTime } from './reducers/notificationReduc
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 import LogoutButton from './components/LogoutButton'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 const Home = ({ user, blogs, blogFormRef, handleBlogCreation }) => {
     return (
@@ -75,7 +76,12 @@ const App = () => {
                 <h2>blogs</h2>
                 <LogoutButton username={user.name} handleLogout={handleLogout} />
                 <Notification/>
-                <Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />} />
+                    </Routes>
+                </Router>
+
 
             </div>
         )
