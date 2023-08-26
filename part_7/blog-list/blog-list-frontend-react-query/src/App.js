@@ -7,16 +7,54 @@ import AddNewBlogForm from './components/AddNewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useNotificationDispatch } from './contexts/NotificationContext'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const App = () => {
-    //const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
     const notificationDispatch = useNotificationDispatch()
 
     const blogFormRef = useRef()
+
+    const result = useQuery({
+        queryKey: ['blogs'],
+        queryFn: blogService.getAll
+    })
+
+    const newBlogMutation = useMutation(blogService.create, {
+        onSuccess: (newBlog) => {
+            const blogs = queryClient.getQueryData(['blogs'])
+            const updatedBlogs = blogs.concat(newBlog)
+            updatedBlogs.sort((a, b) => b.likes - a.likes)
+            queryClient.setQueryData(['blogs'], updatedBlogs)
+            notificationDispatch({
+                type: 'setNotification',
+                payload: {
+                    message: `A new blog is created: ${newBlog.title} by ${newBlog.author}`,
+                    type: 'success'
+                }
+            })
+
+            setTimeout(() => {
+                notificationDispatch({ type: 'unsetNotification' })
+            }, 5000)
+        },
+        onError: (error) => {
+            notificationDispatch({
+                type: 'setNotification',
+                payload: {
+                    message: error.message,
+                    type: 'error'
+                }
+            })
+
+            setTimeout(() => {
+                notificationDispatch({ type: 'unsetNotification' })
+            }, 5000)
+        }
+    })
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -27,17 +65,13 @@ const App = () => {
         }
     }, [])
 
-    const result = useQuery({
-        queryKey: ['blogs'],
-        queryFn: blogService.getAll
-    })
+    // end of hooks
 
     if(result.isLoading){
         return <div>loading data...</div>
     }
-
     const blogs = result.data
-    console.log(blogs)
+    blogs.sort((a, b) => b.likes - a.likes)
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -73,25 +107,10 @@ const App = () => {
             console.log('Logout Error: ', error.message)
         }
     }
+
     const addNewBlog = async (blogObject) => {
         blogFormRef.current.toggleVisibility()
-        const createdBlog = await blogService.create(blogObject)
-        if (createdBlog) {
-            console.log(createdBlog)
-            // const updatedBlogs = await blogService.getAll()
-            // setBlogs(updatedBlogs)
-            notificationDispatch({
-                type: 'setNotification',
-                payload: {
-                    message: `A new blog is created: ${createdBlog.title} by ${createdBlog.author}`,
-                    type: 'success'
-                }
-            })
-
-            setTimeout(() => {
-                notificationDispatch({ type: 'unsetNotification' })
-            }, 5000)
-        }
+        newBlogMutation.mutate(blogObject)
     }
 
     const updateBlog = async (blogObject) => {
