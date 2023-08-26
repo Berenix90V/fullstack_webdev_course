@@ -11,6 +11,7 @@ import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 import LogoutButton from './components/LogoutButton'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Users from './components/Users'
 
 const Home = ({ user, blogs, blogFormRef, handleBlogCreation }) => {
     return (
@@ -79,6 +80,7 @@ const App = () => {
                 <Router>
                     <Routes>
                         <Route path="/" element={<Home user={user} blogFormRef={blogFormRef} blogs={blogs} handleBlogCreation={handleBlogCreation} />} />
+                        <Route path="/users" element={<Users />}/>
                     </Routes>
                 </Router>
 
