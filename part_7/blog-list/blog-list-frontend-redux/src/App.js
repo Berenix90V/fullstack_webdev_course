@@ -37,6 +37,7 @@ const Home = ({ blogs }) => {
             console.log(error.message)
         }
     }
+
     return (
         <>
             <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
@@ -96,12 +97,21 @@ const App = () => {
         }
     }
 
+    const padding = {
+        padding: 5
+    }
 
     if (user) {
         return (
             <div>
+
+                <div>
+                    <Link style={padding} to="/">blogs</Link>
+                    <Link style={padding} to="/users">users</Link>
+                    <LogoutButton username={user.name} handleLogout={handleLogout} />
+                </div>
                 <h2>blogs</h2>
-                <LogoutButton username={user.name} handleLogout={handleLogout} />
+
                 <Notification/>
 
                 <Routes>
