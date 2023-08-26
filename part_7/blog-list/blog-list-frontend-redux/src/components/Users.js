@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-import userService from '../services/users'
-
 const User = ({ user }) => {
     const blogs = user.blogs.length
     return (
@@ -11,15 +8,7 @@ const User = ({ user }) => {
     )
 }
 
-const Users = () => {
-    const [users, setUsers] = useState([])
-    useEffect(() => {
-        const initializeUsers = async () => {
-            const allUsers =  await userService.getAll()
-            setUsers(allUsers)
-        }
-        initializeUsers()
-    },[])
+const Users = ({ users }) => {
 
     return(
         <>

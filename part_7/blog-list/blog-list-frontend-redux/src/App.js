@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
@@ -10,8 +10,10 @@ import { setNotificationForAnIntervalOfTime } from './reducers/notificationReduc
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 import LogoutButton from './components/LogoutButton'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useMatch } from 'react-router-dom'
 import Users from './components/Users'
+import userService from './services/users'
+import SingleUser from './components/SingleUser'
 
 const Home = ({ user }) => {
     const blogFormRef = useRef()
@@ -54,7 +56,20 @@ const Home = ({ user }) => {
 
 const App = () => {
     const user = useSelector(state => state.user)
+    const [users, setUsers] = useState([])
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        const initializeUsers = async () => {
+            const allUsers =  await userService.getAll()
+            setUsers(allUsers)
+        }
+        initializeUsers()
+    },[])
+
+    const match = useMatch('/users/:id')
+    const visualizedUser = match? users.find(u => u.id===match.params.id) : null
+
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -83,7 +98,8 @@ const App = () => {
 
                 <Routes>
                     <Route path="/" element={<Home user={user} />} />
-                    <Route path="/users" element={<Users />}/>
+                    <Route path="/users" element={<Users users={users} />}/>
+                    <Route path="/users/:id" element={<SingleUser user={visualizedUser} />} />
                 </Routes>
 
 
