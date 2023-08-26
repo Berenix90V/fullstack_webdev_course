@@ -10,19 +10,20 @@ import { setNotificationForAnIntervalOfTime } from './reducers/notificationReduc
 import { addNewBlog, initializeBlogs } from './reducers/blogReducer'
 import { setUser, userLogout } from './reducers/loginReducer'
 import LogoutButton from './components/LogoutButton'
-import { Route, Routes, useMatch } from 'react-router-dom'
+import { Link, Route, Routes, useMatch } from 'react-router-dom'
 import Users from './components/Users'
 import userService from './services/users'
 import SingleUser from './components/SingleUser'
 
-const Home = ({ user, blogs }) => {
+const Home = ({ blogs }) => {
     const blogFormRef = useRef()
-    //const blogs = useSelector(state => state.blogs)
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(initializeBlogs())
-    }, [])
+    if(!blogs){
+        return (
+            <div>loading data</div>
+        )
+    }
 
     const handleBlogCreation = async (blogObject) => {
         blogFormRef.current.toggleVisibility()
@@ -36,20 +37,18 @@ const Home = ({ user, blogs }) => {
             console.log(error.message)
         }
     }
-
     return (
         <>
             <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
                 <AddNewBlogForm createBlog={handleBlogCreation} />
             </Togglable>
-
-            {blogs.map((blog) => (
-                <Blog
-                    key={blog.id}
-                    blog={blog}
-                    userId={user.id}
-                />
-            ))}
+            {blogs.map((blog) => {
+                return (
+                    <div key={blog.id} className="blog">
+                        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+                    </div>
+                )
+            })}
         </>
     )
 }
@@ -59,6 +58,11 @@ const App = () => {
     const [users, setUsers] = useState([])
     const blogs = useSelector(state => state.blogs)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(initializeBlogs())
+    }, [])
+
 
     useEffect(() => {
         const initializeUsers = async () => {
@@ -101,7 +105,7 @@ const App = () => {
                 <Notification/>
 
                 <Routes>
-                    <Route path="/" element={<Home user={user} />} />
+                    <Route path="/" element={<Home blogs={blogs} />} />
                     <Route path="/users" element={<Users users={users} />}/>
                     <Route path="/users/:id" element={<SingleUser user={visualizedUser} />} />
                     <Route path="/blogs/:id" element={<Blog blog={visualizedBlog} userId={user.id} />}/>

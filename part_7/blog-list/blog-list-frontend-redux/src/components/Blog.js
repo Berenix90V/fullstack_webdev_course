@@ -1,20 +1,14 @@
-import { useState } from 'react'
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, userId }) => {
-    const [visibleDetails, setVisibleDetails] = useState(false)
-    const hideWhenVisible = { display: visibleDetails ? 'none' : '' }
-    const showWhenVisible = { display: visibleDetails ? '' : 'none' }
     const dispatch = useDispatch()
 
     if(!blog){
         return (
             <div>loading data</div>
         )
-    }
-    const toggleVisibility = () => {
-        setVisibleDetails(!visibleDetails)
     }
 
     const handleAddLike = async () => {
@@ -38,31 +32,17 @@ const Blog = ({ blog, userId }) => {
     }
 
     return (
-        <div className="blog">
-            {blog.title} by {blog.author}
-            <button
-                style={hideWhenVisible}
-                onClick={toggleVisibility}
-                id="expand-button"
-            >
-                view
-            </button>
-            <button
-                style={showWhenVisible}
-                onClick={toggleVisibility}
-                id="hide-button"
-            >
-                hide
-            </button>
-            <div style={showWhenVisible} className="additional-info">
-                <p id="url">url: {blog.url}</p>
+        <div >
+            <h2>{blog.title} by {blog.author}</h2>
+            <div>
+                <Link to={blog.url}>url: {blog.url}</Link>
                 <p id="likes">
                     likes: {blog.likes}{' '}
                     <button onClick={handleAddLike} id="add-like">
                         like
                     </button>{' '}
                 </p>
-                <p id="user">{blog.user.name}</p>
+                <p id="user">added by {blog.user.name}</p>
             </div>
             {blog.user.id === userId && (
                 <button onClick={handleRemoveBlog}>delete</button>
