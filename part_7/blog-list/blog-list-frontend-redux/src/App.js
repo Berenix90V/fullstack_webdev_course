@@ -105,24 +105,19 @@ const App = () => {
         return (
             <div>
 
-                <div>
+                <div className="navbar">
                     <Link style={padding} to="/">blogs</Link>
                     <Link style={padding} to="/users">users</Link>
                     <LogoutButton username={user.name} handleLogout={handleLogout} />
                 </div>
                 <h2>blogs</h2>
-
                 <Notification/>
-
                 <Routes>
                     <Route path="/" element={<Home blogs={blogs} />} />
                     <Route path="/users" element={<Users users={users} />}/>
                     <Route path="/users/:id" element={<SingleUser user={visualizedUser} />} />
                     <Route path="/blogs/:id" element={<Blog blog={visualizedBlog} userId={user.id} />}/>
                 </Routes>
-
-
-
             </div>
         )
     } else {
