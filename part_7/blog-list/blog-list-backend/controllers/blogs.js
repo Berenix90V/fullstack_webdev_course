@@ -1,7 +1,7 @@
 import express from 'express'
 import Blog from '../models/blog.js'
 import User from '../models/user.js'
-import jsonwebtoken from 'jsonwebtoken'
+import Comment from "../models/comment.js";
 
 const blogsRouter = express.Router()
 blogsRouter.get('/', async (request, response) => {
@@ -80,6 +80,35 @@ blogsRouter.put('/:id', async (request, response) => {
     } else {
         response.status(404).end()
     }
+})
+
+blogsRouter.get('/:id/comments', async (request, response) => {
+    const blogId = request.params.id
+    const comments = await Comment.find({blog: blogId})
+    response.json(comments)
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+    const body = request.body
+    const blogId = request.params.id
+    const currentUserId = request.user
+
+    if(!currentUserId){
+        return response.status(401).json({error:'Invalid token'})
+    }
+
+    const blog = await Blog.findById(blogId)
+
+    const comment = new Comment({
+        content: body.content,
+        blog: blogId
+    })
+
+    const savedComment = await comment.save()
+    blog.comments = blog.comments.concat(savedComment._id)
+    await blog.save()
+
+    response.status(201).json(savedComment)
 })
 
 export default blogsRouter
