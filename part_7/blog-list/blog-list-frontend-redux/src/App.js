@@ -14,6 +14,7 @@ import { Link, Route, Routes, useMatch } from 'react-router-dom'
 import Users from './components/Users'
 import userService from './services/users'
 import SingleUser from './components/SingleUser'
+import { Nav, Navbar } from 'react-bootstrap'
 
 const Home = ({ blogs }) => {
     const blogFormRef = useRef()
@@ -103,13 +104,21 @@ const App = () => {
 
     if (user) {
         return (
-            <div>
-
-                <div className="navbar">
-                    <Link style={padding} to="/">blogs</Link>
-                    <Link style={padding} to="/users">users</Link>
-                    <LogoutButton username={user.name} handleLogout={handleLogout} />
-                </div>
+            <div className="container" >
+                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        <Nav className="me-auto">
+                            <Nav.Link href="#" as="span">
+                                <Link style={padding} to="/">blogs</Link>
+                            </Nav.Link>
+                            <Nav.Link href="#" as="span">
+                                <Link style={padding} to="/users">users</Link>
+                            </Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+                <LogoutButton username={user.name} handleLogout={handleLogout} />
                 <h2>blogs</h2>
                 <Notification/>
                 <Routes>
