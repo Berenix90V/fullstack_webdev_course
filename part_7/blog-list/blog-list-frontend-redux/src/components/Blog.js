@@ -47,6 +47,11 @@ const Blog = ({ blog, userId }) => {
             {blog.user.id === userId && (
                 <button onClick={handleRemoveBlog}>delete</button>
             )}
+            <h3>comments</h3>
+            <ul>
+                {blog.comments.map(comment => <li key={comment.id}>{comment.content}</li>)}
+            </ul>
+
         </div>
     )
 }
