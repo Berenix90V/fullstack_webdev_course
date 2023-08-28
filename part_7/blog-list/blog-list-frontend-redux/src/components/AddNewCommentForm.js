@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const AddNewCommentForm = () => {
+const AddNewCommentForm = ({ addNewComment }) => {
     const [comment, setComment] = useState('')
     const handleCommentChange = (event) => {
         const newValue = event.target.value
@@ -9,7 +9,7 @@ const AddNewCommentForm = () => {
 
     const handleNewComment = (event) => {
         event.preventDefault()
-        console.log(comment)
+        addNewComment(comment)
         setComment('')
     }
 
