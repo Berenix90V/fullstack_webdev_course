@@ -51,4 +51,10 @@ export const removeBlog = (blogId) => {
         dispatch(setBlogs(updatedBlogs))
     }
 }
+
+export const addCommentToBlog = (commentObject) => {
+    return async () => {
+        await blogService.addComment(commentObject.blog, commentObject)
+    }
+}
 export default blogSlice.reducer
