@@ -5,10 +5,10 @@ import Comment from "../models/comment.js";
 
 const blogsRouter = express.Router()
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({}).populate('user', {
-        username: 1,
-        name: 1,
-    })
+    const blogs = await Blog.find({}).populate([
+        {path: 'user', select: 'username, name'},
+        {path: 'comments'}
+    ])
     response.json(blogs)
 })
 
