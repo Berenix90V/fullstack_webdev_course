@@ -1,6 +1,7 @@
 import { removeBlog, updateBlog } from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import AddNewCommentForm from './AddNewCommentForm'
 
 const Blog = ({ blog, userId }) => {
     const dispatch = useDispatch()
@@ -48,6 +49,7 @@ const Blog = ({ blog, userId }) => {
                 <button onClick={handleRemoveBlog}>delete</button>
             )}
             <h3>comments</h3>
+            <AddNewCommentForm/>
             <ul>
                 {blog.comments.map(comment => <li key={comment.id}>{comment.content}</li>)}
             </ul>
