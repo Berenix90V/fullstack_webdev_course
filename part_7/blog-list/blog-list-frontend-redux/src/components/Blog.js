@@ -2,6 +2,7 @@ import { addCommentToBlog, removeBlog, updateBlog } from '../reducers/blogReduce
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AddNewCommentForm from './AddNewCommentForm'
+import { Button } from 'react-bootstrap'
 
 const Blog = ({ blog, userId }) => {
     const dispatch = useDispatch()
@@ -44,20 +45,20 @@ const Blog = ({ blog, userId }) => {
     }
 
     return (
-        <div >
+        <div>
             <h2>{blog.title} by {blog.author}</h2>
             <div>
                 <Link to={blog.url}>url: {blog.url}</Link>
                 <p id="likes">
-                    likes: {blog.likes}{' '}
-                    <button onClick={handleAddLike} id="add-like">
+                    likes: {blog.likes}
+                    <Button onClick={ handleAddLike } id="add-like" variant="primary">
                         like
-                    </button>{' '}
+                    </Button>
                 </p>
                 <p id="user">added by {blog.user.name}</p>
             </div>
             {blog.user.id === userId && (
-                <button onClick={handleRemoveBlog}>delete</button>
+                <Button onClick={handleRemoveBlog} variant="danger">delete</Button>
             )}
             <h3>comments</h3>
             <AddNewCommentForm addNewComment={addNewComment}/>
