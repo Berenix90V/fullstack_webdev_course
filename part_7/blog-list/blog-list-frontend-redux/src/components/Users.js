@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 const User = ({ user }) => {
     const blogs = user.blogs.length
     return (
@@ -14,7 +15,7 @@ const Users = ({ users }) => {
     return(
         <>
             <h2>Users</h2>
-            <table>
+            <Table striped>
                 <thead>
                     <tr>
                         <th></th>
@@ -25,7 +26,7 @@ const Users = ({ users }) => {
                     {users.map(user => <User key={user.id} user={user} />)}
                 </tbody>
 
-            </table>
+            </Table>
 
         </>
     )
