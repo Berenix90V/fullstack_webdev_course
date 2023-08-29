@@ -119,7 +119,7 @@ const App = () => {
                     </Navbar.Collapse>
                 </Navbar>
                 <LogoutButton username={user.name} handleLogout={handleLogout} />
-                <h2>blogs</h2>
+                <h2>Blogs</h2>
                 <Notification/>
                 <Routes>
                     <Route path="/" element={<Home blogs={blogs} />} />
