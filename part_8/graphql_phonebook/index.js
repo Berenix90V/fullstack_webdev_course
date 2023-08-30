@@ -25,11 +25,14 @@ let persons = [
 ]
 
 const typeDefs = `
+    type Address {
+      street: String!
+      city: String! 
+    }
     type Person {
         name: String!
         phone: String
-        street: String!
-        city: String!
+        address: Address!
         id: ID!
     }
     
@@ -41,11 +44,19 @@ const typeDefs = `
 `
 
 const resolvers = {
-    Query:{
+    Query: {
         personCount: () => persons.length,
         allPersons: () => persons,
         findPerson: (root, args) =>
             persons.find(p => p.name === args.name)
+    },
+    Persons: {
+        address: (root) => {
+            return {
+                street: root.street,
+                city: root.city
+            }
+        }
     }
 }
 
