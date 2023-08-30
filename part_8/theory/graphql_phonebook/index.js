@@ -1,7 +1,7 @@
 import {ApolloServer} from "@apollo/server";
 import {startStandaloneServer} from "@apollo/server/standalone";
 import {v1 as uuid} from 'uuid'
-import {GraphQLError} from "graphql/error/index.js";
+import {GraphQLError} from 'graphql'
 
 let persons = [
     {
@@ -31,6 +31,7 @@ const typeDefs = `
       street: String!
       city: String! 
     }
+    
     type Person {
         name: String!
         phone: String
@@ -59,7 +60,7 @@ const typeDefs = `
         editNumber(
             name: String!
             phone: String!
-        )
+        ): Person
     }
 `
 
