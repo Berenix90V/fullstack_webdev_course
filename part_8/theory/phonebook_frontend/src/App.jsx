@@ -3,6 +3,7 @@ import Persons from "./components/Persons.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import {ALL_PERSONS} from "./queries.js";
 import {useState} from "react";
+import PhoneForm from "./components/PhoneForm.jsx";
 
 const Notify = ({errorMessage}) => {
     if(!errorMessage){
@@ -33,6 +34,7 @@ function App() {
             <Notify errorMessage={errorMessage}/>
             <Persons persons={result.data.allPersons}></Persons>
             <PersonForm setError={notify} />
+            <PhoneForm />
         </div>
     )
 }
