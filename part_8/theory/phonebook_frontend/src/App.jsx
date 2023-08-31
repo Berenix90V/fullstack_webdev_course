@@ -34,7 +34,7 @@ function App() {
             <Notify errorMessage={errorMessage}/>
             <Persons persons={result.data.allPersons}></Persons>
             <PersonForm setError={notify} />
-            <PhoneForm />
+            <PhoneForm setError={notify} />
         </div>
     )
 }
