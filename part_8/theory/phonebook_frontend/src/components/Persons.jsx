@@ -1,19 +1,6 @@
-import {gql, useQuery} from "@apollo/client";
+import {useQuery} from "@apollo/client";
 import {useState} from "react";
-
-const FIND_PERSONS = gql`
-    query findPersonByName($nameToSearch: String!) {
-        findPerson(name: $nameToSearch) {
-            name
-            phone
-            id
-            address {
-                street
-                city
-            }
-        }
-    }
-`
+import {FIND_PERSONS} from "../queries.js";
 
 const Person = ({ person, onClose }) => {
     return (
