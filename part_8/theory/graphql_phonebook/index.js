@@ -3,6 +3,7 @@ import {startStandaloneServer} from "@apollo/server/standalone";
 import {v1 as uuid} from 'uuid'
 import {GraphQLError} from 'graphql'
 
+
 let persons = [
     {
         name: "Arto Hellas",
@@ -27,57 +28,71 @@ let persons = [
 ]
 
 const typeDefs = `
-    type Address {
+  type Address {
+    street: String!
+    city: String! 
+  }
+
+  enum YesNo {
+    YES
+    NO
+  }
+  
+  type Query {
+    personCount: Int!
+    allPersons(phone: YesNo): [Person!]!
+    findPerson(name: String!): Person
+  }
+
+  type Person {
+    name: String!
+    phone: String
+    address: Address!
+    id: ID!
+  }
+
+  type Query {
+    personCount: Int!
+    allPersons: [Person!]!
+    findPerson(name: String!): Person
+  }
+
+  type Mutation {
+    addPerson(
+      name: String!
+      phone: String
       street: String!
-      city: String! 
-    }
-    
-    type Person {
-        name: String!
-        phone: String
-        address: Address!
-        id: ID!
-    }
-    
-    enum YesNo {
-        YES
-        NO
-    }
-    
-    type Query {
-        personCount: Int!
-        allPersons(phone:YesNo): [Person!]!
-        findPerson(name: String!): Person
-    }
-    
-    type Mutation {
-        addPerson(
-            name: String!
-            phone: String
-            street: String!
-            city: String!
-        ): Person
-        editNumber(
-            name: String!
-            phone: String!
-        ): Person
-    }
+      city: String!
+    ): Person
+
+    editNumber(
+      name: String!
+      phone: String!
+    ): Person
+  }
 `
 
 const resolvers = {
     Query: {
         personCount: () => persons.length,
-        allPersons: () => persons,
+        allPersons: (root, args) => {
+            if (!args.phone) {
+                return persons
+            }
+            const byPhone = (person) =>
+                args.phone === 'YES' ? person.phone : !person.phone
+            return persons.filter(byPhone)
+        },
         findPerson: (root, args) =>
             persons.find(p => p.name === args.name)
     },
     Person: {
-        address: (root) => {
+        address: ({ street, city }) => {
             return {
-                street: root.street,
-                city: root.city
+                street,
+                city,
             }
-        }
+        },
     },
     Mutation: {
         addPerson: (root, args) => {
@@ -89,17 +104,18 @@ const resolvers = {
                     }
                 })
             }
-            const person = {...args, id: uuid()}
+            const person = { ...args, id: uuid() }
             persons = persons.concat(person)
             return person
         },
         editNumber: (root, args) => {
             const person = persons.find(p => p.name === args.name)
-            if(!person){
+            if (!person) {
                 return null
             }
-            const updatedPerson = {...person, phone: args.phone}
-            persons = persons.map(p => p.name === args.name? updatedPerson : p)
+
+            const updatedPerson = { ...person, phone: args.phone }
+            persons = persons.map(p => p.name === args.name ? updatedPerson : p)
             return updatedPerson
         }
     }
@@ -107,8 +123,9 @@ const resolvers = {
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
 })
+
 
 startStandaloneServer(server, {
     listen: { port: 4000 },
