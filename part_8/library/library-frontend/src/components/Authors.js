@@ -2,19 +2,12 @@ import {useQuery} from "@apollo/client";
 import {ALL_AUTHORS} from "../queries";
 import BirthYearForm from "./BirthYearForm";
 import {useState} from "react";
+import Select from "react-select/base";
 
-const Notification = ({notification}) => {
-    return(
-        <div>
-            {notification}
-        </div>
-    )
-}
 
 const Authors = (props) => {
 
     const result = useQuery(ALL_AUTHORS)
-    const [ notification, setNotification ] = useState('')
 
     if (!props.show) {
         return null
@@ -24,17 +17,11 @@ const Authors = (props) => {
     }
     const authors =  result.data.allAuthors
 
-    const notify = (message) => {
-        setNotification(message)
-        setTimeout(() => {
-            setNotification('')
-        }, 5000)
-    }
+
 
     return (
         <div>
             <h2>authors</h2>
-                {notification!== '' && <Notification notification={notification}/>}
             <table>
                 <tbody>
                     <tr>
@@ -52,7 +39,7 @@ const Authors = (props) => {
                 </tbody>
             </table>
             <h2>Set birth year</h2>
-            <BirthYearForm setError={notify}/>
+            <BirthYearForm authors={authors}/>
         </div>
     )
 }
