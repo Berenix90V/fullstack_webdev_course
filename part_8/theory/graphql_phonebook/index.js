@@ -1,10 +1,11 @@
 import {ApolloServer} from "@apollo/server";
 import {startStandaloneServer} from "@apollo/server/standalone";
-import {v1 as uuid} from 'uuid'
 import {GraphQLError} from 'graphql'
 import mongoose from "mongoose";
 import config from "./utils/config.js";
 import Person from "./models/person.js"
+import User from "./models/user.js";
+import jsonwebtoken from 'jsonwebtoken'
 
 mongoose.set('strictQuery', false)
 
@@ -18,6 +19,16 @@ mongoose.connect(config.mongodb_url)
 
 
 const typeDefs = `
+  type User {
+    username: String!
+    friends: [Person!]!
+    id: ID!
+  }
+  
+  type Token {
+    value: String!
+  }
+  
   type Address {
     street: String!
     city: String! 
@@ -32,6 +43,7 @@ const typeDefs = `
     personCount: Int!
     allPersons(phone: YesNo): [Person!]!
     findPerson(name: String!): Person
+    me: User
   }
 
   type Person {
@@ -59,21 +71,19 @@ const typeDefs = `
       name: String!
       phone: String!
     ): Person
+    
+    createUser(
+      username: String!
+    ): User
+    
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 
 const resolvers = {
-    Query: {
-        personCount: async() => Person.collection.countDocuments(),
-        allPersons: (root, args) => {
-            if(!args.phone){
-                return Person.find({})
-            }
-            return Person.find({phone: {$exists: args.phone === 'YES'}})
-        },
-        findPerson: async (root, args) =>
-            Person.find({ name: args.name})
-    },
     Person: {
         address: (root) => {
             return {
@@ -82,6 +92,18 @@ const resolvers = {
             }
         },
     },
+
+    Query: {
+        personCount: async() => Person.collection.countDocuments(),
+        allPersons: async (root, args) => {
+            if(!args.phone){
+                return Person.find({})
+            }
+            return Person.find({phone: {$exists: args.phone === 'YES'}})
+        },
+        findPerson: async (root, args) => Person.findOne({ name: args.name }),
+    },
+
     Mutation: {
         addPerson: async (root, args) => {
             const person = new Person({...args})
@@ -112,6 +134,37 @@ const resolvers = {
                     }
                 })
             }
+        },
+        createUser: async (root, args) => {
+            const user = new User({username: args.username})
+            return user.save()
+                .catch(error => {
+                    throw new GraphQLError('Creating the user failed', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            invalidArgs: args.name,
+                            error
+                        }
+                    })
+                })
+        },
+        login: async (root, args) => {
+            const user = await User.findOne({username: args.username})
+
+            if( !user || args.password !== 'secret') {
+                throw new GraphQLError('wrong credentials', {
+                    extensions:{
+                        code: 'BAD_USER_INPUT'
+                    }
+                })
+            }
+
+            const userForToken = {
+                username: user.username,
+                id: user._id
+            }
+
+            return {value: jsonwebtoken.sign(userForToken, process.env.JWT_SECRET)}
         }
     }
 }
