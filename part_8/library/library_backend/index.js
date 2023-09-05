@@ -4,6 +4,8 @@ import {startStandaloneServer} from "@apollo/server/standalone";
 import config from "./utils/config.js"
 import Book from './models/book.js'
 import Author from './models/author.js'
+import {GraphQLError} from "graphql/error/index.js";
+import {graphql} from "graphql/graphql.js";
 
 mongoose.connect(config.mongodb_url)
     .then(() => {
@@ -183,10 +185,34 @@ const resolvers = {
                     name: author,
                     born: null
                 })
-                authorObj = await newAuthor.save()
+                try{
+                    authorObj = await newAuthor.save()
+                } catch(error){
+                    throw new GraphQLError('Saving author failed', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            invalidArgs: args.author,
+                            error
+                        }
+                    })
+                }
+
             }
             const book = new Book({...bookProps, author: authorObj._id})
-            return book.save()
+            let savedBook = null
+            try{
+                savedBook = await book.save()
+            }catch(error){
+                throw new GraphQLError('Saving book failed', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args.title,
+                        error
+                    }
+                })
+            }
+            return savedBook
+
         },
         editAuthor: (root, args) => {
             console.log('edit author')
@@ -199,9 +225,21 @@ const resolvers = {
             //     return null
             // }
         },
-        addAuthor: (root, args) => {
+        addAuthor: async (root, args) => {
             const author = new Author({...args})
-            return author.save()
+            let savedAuthor = null
+            try{
+                savedAuthor = await author.save()
+            } catch (error){
+                throw new GraphQLError('Saving author failed', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args.name,
+                        error
+                    }
+                })
+            }
+            return savedAuthor
         }
     }
 }
