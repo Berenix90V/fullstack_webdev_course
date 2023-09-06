@@ -14,5 +14,13 @@ const schema = new mongoose.Schema({
 
 schema.plugin(uniqueValidator)
 
+schema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = document._id.toString()
+        delete returnedObject._id
+    }
+})
+
 const User = mongoose.model('User', schema)
+
 export default User
