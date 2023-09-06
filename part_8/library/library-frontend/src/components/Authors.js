@@ -1,9 +1,6 @@
 import {useQuery} from "@apollo/client";
 import {ALL_AUTHORS} from "../queries";
 import BirthYearForm from "./BirthYearForm";
-import {useState} from "react";
-import Select from "react-select/base";
-
 
 const Authors = (props) => {
 
