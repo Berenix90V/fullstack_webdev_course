@@ -5,6 +5,8 @@ import config from "./utils/config.js"
 import Book from './models/book.js'
 import Author from './models/author.js'
 import {GraphQLError} from "graphql/error/index.js";
+import User from "./models/user.js";
+import jsonwebtoken from 'jsonwebtoken'
 
 mongoose.connect(config.mongodb_url)
     .then(() => {
@@ -104,7 +106,17 @@ mongoose.connect(config.mongodb_url)
   you can remove the placeholder query once your first one has been implemented
 */
 
-const typeDefs = `   
+const typeDefs = `  
+    type User {
+        username: String!
+        favoriteGenre: String!
+        id: ID!
+    }
+    
+    type Token {
+        value: String!
+    }
+     
     type Author {
         name: String!
         born: Int
@@ -124,6 +136,7 @@ const typeDefs = `
         authorCount: Int!
         allBooks(author: String, genre: String): [Book!]!
         allAuthors: [Author!]!
+        me: User
     }
     
     type Mutation {
@@ -141,6 +154,14 @@ const typeDefs = `
             name: String!
             born: Int
         ): Author
+        createUser(
+            username: String!
+            favoriteGenre: String!
+        ): User
+        login(
+            username: String!
+            password: String!
+        ): Token
     }
 `
 
@@ -248,6 +269,35 @@ const resolvers = {
                 return null
             }
         },
+        createUser: async(root, args) => {
+            const user = new User({...args})
+            return user.save()
+                .catch(error => {
+                    throw new GraphQLError('Creating the user failed', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            invalidArgs: args.username,
+                            error
+                        }
+                    })
+                })
+        },
+        login: async(root, args) => {
+            const user = await User.findOne({username: args.username})
+            if(!user || args.password !== 'secret') {
+                throw new GraphQLError('wrong credentials', {
+                    extensions:{
+                        code: 'BAD_USER_INPUT'
+                    }
+                })
+            }
+            const userForToken = {
+                username: user.username,
+                is: user._id
+            }
+
+            return {value: jsonwebtoken.sign(userForToken, process.env.JWT_SECRET)}
+        }
     }
 }
 
