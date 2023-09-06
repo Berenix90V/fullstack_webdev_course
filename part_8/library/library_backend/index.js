@@ -157,8 +157,8 @@ const resolvers = {
         genres: (root) => root.genres
     },
     Query: {
-        bookCount: () => Book.count(),
-        authorCount: () => Author.count(),
+        bookCount: async () => await Book.count(),
+        authorCount: async () => await Author.count(),
         allBooks: async (root, args) => {
             let shownBooks = await Book.find({})
             console.log(args)
@@ -173,7 +173,7 @@ const resolvers = {
             return shownBooks
 
         },
-        allAuthors: () => Author.find({})
+        allAuthors: async () => await Author.find({})
     },
     Mutation: {
         addBook: async (root, args) => {
