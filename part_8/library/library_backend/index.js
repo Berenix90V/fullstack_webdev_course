@@ -5,7 +5,6 @@ import config from "./utils/config.js"
 import Book from './models/book.js'
 import Author from './models/author.js'
 import {GraphQLError} from "graphql/error/index.js";
-import {graphql} from "graphql/graphql.js";
 
 mongoose.connect(config.mongodb_url)
     .then(() => {
@@ -178,7 +177,6 @@ const resolvers = {
     Mutation: {
         addBook: async (root, args) => {
             const {author, ...bookProps} = args
-
             let authorObj = await Author.findOne({name:author})
             if(!authorObj){
                 const newAuthor = new Author({
@@ -214,17 +212,6 @@ const resolvers = {
             return savedBook
 
         },
-        editAuthor: (root, args) => {
-            console.log('edit author')
-            // const author = authors.find(a => a.name === args.name)
-            // if (author){
-            //     const updatedAuthor = {...author, born: args.setBornTo}
-            //     authors = authors.map(a => a.name === args.name? updatedAuthor : a)
-            //     return updatedAuthor
-            // } else{
-            //     return null
-            // }
-        },
         addAuthor: async (root, args) => {
             const author = new Author({...args})
             let savedAuthor = null
@@ -240,7 +227,27 @@ const resolvers = {
                 })
             }
             return savedAuthor
-        }
+        },
+        editAuthor: async (root, args) => {
+            const author = await Author.findOne({name: args.name})
+            if (author){
+                author.born = args.setBornTo
+                try{
+                    return await author.save()
+                } catch (error) {
+                    throw new GraphQLError('Updating author failed', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            invalidArgs: args.name,
+                            error
+                        }
+                    })
+                }
+
+            } else{
+                return null
+            }
+        },
     }
 }
 
