@@ -121,6 +121,7 @@ const typeDefs = `
         name: String!
         born: Int
         id: ID!
+        bookCount: Int!
     }
     
     type Book {
@@ -168,7 +169,8 @@ const typeDefs = `
 const resolvers = {
     Author: {
         name: (root) => root.name,
-        id: (root) => root.id
+        id: (root) => root.id,
+        bookCount: async (root) => await Book.count({author: root.id})
     },
     Book: {
         title: (root) => root.title,
