@@ -140,11 +140,10 @@ const resolvers = {
             return person
         },
         editNumber: async (root, args) => {
-            const person = await Person.find({name: args.name})
+            const person = await Person.findOne({name: args.name})
             person.phone = args.phone
-
             try{
-                await person.save()
+                return await person.save()
             } catch(error){
                 throw new GraphQLError('Saving number failed', {
                     extensions: {
