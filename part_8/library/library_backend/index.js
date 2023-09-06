@@ -183,13 +183,11 @@ const resolvers = {
         authorCount: async () => await Author.count(),
         allBooks: async (root, args) => {
             let shownBooks = await Book.find({})
-            console.log(args)
             if(args.author){
                 const author = await Author.findOne({name: args.author})
                 shownBooks = await Book.find({author: author._id})
             }
             if (args.genre){
-                console.log(args.genre)
                 shownBooks = await Book.find({genres: args.genre})
             }
             return shownBooks
