@@ -7,7 +7,7 @@ const Recommendations = ({show, favGenre}) => {
     if(result.loading){
         return <div>data loading...</div>
     }
-    if (show) {
+    if (!show) {
         return null
     }
 
@@ -16,7 +16,7 @@ const Recommendations = ({show, favGenre}) => {
     return(
         <div>
             <h2>recommendations</h2>
-            <p>books in your favorite genre {favGenre}</p>
+            <p>books in your favorite genre <b>{favGenre}</b></p>
             <table>
                 <tbody>
                     <tr>
@@ -26,9 +26,9 @@ const Recommendations = ({show, favGenre}) => {
                     </tr>
                     {books.map(b=>(
                         <tr key={b.title}>
-                            <td>b.title</td>
-                            <td>b.author.name</td>
-                            <td>b.published</td>
+                            <td>{b.title}</td>
+                            <td>{b.author.name}</td>
+                            <td>{b.published}</td>
                         </tr>
                     ))}
 
