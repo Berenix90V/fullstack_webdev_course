@@ -199,6 +199,7 @@ const resolvers = {
     Mutation: {
         addBook: async (root, args, context) => {
             const currentUser = context.currentUser
+
             if(!currentUser){
                 throw new GraphQLError('not authenticated', {
                     extensions: {
@@ -239,6 +240,7 @@ const resolvers = {
                     }
                 })
             }
+
             return savedBook
 
         },
