@@ -37,7 +37,6 @@ const App = () => {
     }
 
     const currentUser = result.data.me
-    console.log(currentUser)
 
     return (
         <div>

@@ -2,7 +2,9 @@ import {useQuery} from "@apollo/client";
 import {ALL_BOOKS} from "../queries";
 
 const Recommendations = ({show, favGenre}) => {
-    const result = useQuery(ALL_BOOKS)
+    const result = useQuery(ALL_BOOKS, {
+        variables:{ genre: favGenre}
+    })
 
     if(result.loading){
         return <div>data loading...</div>
@@ -11,7 +13,7 @@ const Recommendations = ({show, favGenre}) => {
         return null
     }
 
-    const books = result.data.allBooks.filter(b=>b.genres.includes(favGenre))
+    const books = result.data.allBooks
 
     return(
         <div>
