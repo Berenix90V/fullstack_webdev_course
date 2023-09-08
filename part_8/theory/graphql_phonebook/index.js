@@ -6,11 +6,13 @@ import User from "./models/user.js";
 import typeDefs from "./schema.js";
 import resolvers from "./resolvers.js";
 import * as http from "http";
-import {ApolloServerPluginDrainHttpServer} from "@apollo/server/src/plugin/drainHttpServer/index.js";
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import {makeExecutableSchema} from "@graphql-tools/schema";
 import {expressMiddleware} from "@apollo/server/express4";
 import jwt from "jsonwebtoken";
 import cors from 'cors'
+import {WebSocketServer} from "ws";
+import {useServer} from "graphql-ws/lib/use/ws";
 
 mongoose.set('strictQuery', false)
 
@@ -25,10 +27,42 @@ mongoose.connect(config.mongodb_url)
 
 const start = async () => {
     const app = express()
+
+    // This `app` is the returned value from `express()`.
     const httpServer = http.createServer(app)
+
+    // Creating the WebSocket server
+    const wsServer = new WebSocketServer({
+        // This is the `httpServer` we created in a previous step.
+        server: httpServer,
+        // Pass a different path here if app.use
+        // serves expressMiddleware at a different path
+        path: '/'
+    })
+
+    // Create an instance of GraphQLSchema
+    const schema = makeExecutableSchema({typeDefs, resolvers})
+
+    // Hand in the schema we just created and have the
+    // WebSocketServer start listening.
+    const serverCleanup = useServer({schema}, wsServer)
+
     const server = new ApolloServer({
-        schema: makeExecutableSchema({typeDefs, resolvers}),
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        schema,
+        plugins: [
+            // Proper shutdown for the HTTP server.
+            ApolloServerPluginDrainHttpServer({ httpServer }),
+
+            // Proper shutdown for the WebSocket server.
+            {
+                async serverWillStart(){
+                    return{
+                        async drainServer(){
+                            await serverCleanup.dispose()
+                        }
+                    }
+                }
+            }],
     })
     await server.start()
 

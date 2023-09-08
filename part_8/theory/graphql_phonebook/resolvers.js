@@ -2,6 +2,9 @@ import Person from "./models/person.js";
 import {GraphQLError} from "graphql/index.js";
 import User from "./models/user.js";
 import jsonwebtoken from "jsonwebtoken";
+import {PubSub} from 'graphql-subscriptions'
+
+const pubsub = new PubSub()
 
 const resolvers = {
     Person: {
@@ -32,6 +35,8 @@ const resolvers = {
             const person = new Person({...args})
             const currentUser = context.currentUser
 
+            console.log(person)
+
             if(!currentUser){
                 throw new GraphQLError('not authenticated', {
                     extensions: {
@@ -53,6 +58,8 @@ const resolvers = {
                     }
                 })
             }
+
+            pubsub.publish('PERSON_ADDED', {personAdded: person})
             return person
         },
         editNumber: async (root, args) => {
@@ -118,7 +125,11 @@ const resolvers = {
             return currentUser
         }
     },
-
+    Subscription: {
+        personAdded: {
+            subscribe: () => pubsub.asyncIterator('PERSON_ADDED')
+        }
+    }
 }
 
 export default resolvers
