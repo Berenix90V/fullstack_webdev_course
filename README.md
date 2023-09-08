@@ -166,3 +166,13 @@ store.subscribe(renderApp)
 ```
 if it's not done the app or component doesn't rerender on store change.
 So during the tests we can either rerender it manually or subscribe to the store.
+
+## Error on ApolloDrain:
+instead of the autofilled import:
+```javascript
+import {ApolloServerPluginDrainHttpServer} from "@apollo/server/src/plugin/drainHttpServer/index.js";
+```
+insert:
+```javascript
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+```
