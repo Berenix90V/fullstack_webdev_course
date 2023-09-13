@@ -5,6 +5,7 @@ import {ALL_PERSONS, PERSON_ADDED} from "./queries.js";
 import {useState} from "react";
 import PhoneForm from "./components/PhoneForm.jsx";
 import LoginForm from "./components/LoginForm.jsx";
+import {updateCache} from "./utils.js";
 
 const Notify = ({errorMessage}) => {
     if(!errorMessage){
@@ -31,15 +32,16 @@ function App() {
     }
 
     useSubscription(PERSON_ADDED, {
-        onData: ({data}) => {
+        onData: ({data, client}) => {
             const addedPerson = data.data.personAdded
             notify(`${addedPerson} added`)
 
-            client.cache.updateQuery({ query: ALL_PERSONS}, ({allPersons}) => {
-                return {
-                    allPersons: allPersons.concat(addedPerson)
-                }
-            })
+            updateCache( client.cache, ALL_PERSONS, addedPerson )
+            // client.cache.updateQuery({ query: ALL_PERSONS}, ({allPersons}) => {
+            //     return {
+            //         allPersons: allPersons.concat(addedPerson)
+            //     }
+            // })
         }
     })
 
