@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 import {ApolloServer} from "@apollo/server";
-import {startStandaloneServer} from "@apollo/server/standalone";
 import config from "./utils/config.js"
-import Book from './models/book.js'
-import Author from './models/author.js'
-import {GraphQLError} from "graphql/error/index.js";
 import User from "./models/user.js";
+import express from 'express'
+import cors from 'cors'
+import * as http from "http";
 import jsonwebtoken from 'jsonwebtoken'
+import {makeExecutableSchema} from "@graphql-tools/schema";
+import {ApolloServerPluginDrainHttpServer} from "@apollo/server/src/plugin/drainHttpServer/index.js";
+import {expressMiddleware} from "@apollo/server/express4";
 
 mongoose.connect(config.mongodb_url)
     .then(() => {
@@ -106,21 +108,36 @@ mongoose.connect(config.mongodb_url)
   you can remove the placeholder query once your first one has been implemented
 */
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-})
+const start = async () => {
+    const app =  express()
+    const httpServer = http.createServer(app)
 
-startStandaloneServer(server, {
-    listen: { port: 4000 },
-    context: async ({req, res}) => {
-        const auth = req? req.headers.authorization : null
-        if (auth && auth.startsWith('Bearer ')){
-            const decodedToken = jsonwebtoken.verify(auth.substring(7), process.env.JWT_SECRET)
-            const currentUser = await User.findById(decodedToken.id)
-            return {currentUser}
-        }
-    }
-}).then(({ url }) => {
-    console.log(`Server ready at ${url}`)
-})
+    const server =  new ApolloServer({
+        schema: makeExecutableSchema({typeDefs, resolvers}),
+        plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
+    })
+
+    await server.start()
+
+    app.use(
+        '/',
+        cors(),
+        express.json(),
+        expressMiddleware( server, {
+            context: async ({req, res}) => {
+                const auth = req? req.headers.authorization : null
+                if (auth && auth.startsWith('Bearer ')){
+                    const decodedToken = jsonwebtoken.verify(auth.substring(7), process.env.JWT_SECRET)
+                    const currentUser = await User.findById(decodedToken.id)
+                    return {currentUser}
+                }
+            }
+        })
+    )
+
+    const PORT = 4000
+    httpServer.listen(PORT, () => console.log(`Server is now running on http://localhost:${PORT}`))
+
+}
+
+start()
