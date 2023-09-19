@@ -3,6 +3,9 @@ import Author from "./models/author.js";
 import User from "./models/user.js";
 import jsonwebtoken from "jsonwebtoken";
 import {GraphQLError} from "graphql/error/index.js";
+import {PubSub} from 'graphql-subscriptions'
+
+const pubsub = new PubSub()
 
 const resolvers = {
     Author: {
@@ -63,7 +66,6 @@ const resolvers = {
                         }
                     })
                 }
-
             }
             const book = new Book({...bookProps, author: authorObj._id})
             let savedBook = null
@@ -78,6 +80,7 @@ const resolvers = {
                     }
                 })
             }
+            await pubsub.publish('BOOK_ADDED', {bookAdded: savedBook})
 
             return savedBook
 
@@ -163,5 +166,13 @@ const resolvers = {
 
             return {value: jsonwebtoken.sign(userForToken, process.env.JWT_SECRET)}
         }
+    },
+
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+        }
     }
 }
+
+export default resolvers

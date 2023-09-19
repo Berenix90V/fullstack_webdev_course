@@ -7,10 +7,12 @@ import cors from 'cors'
 import * as http from "http";
 import jsonwebtoken from 'jsonwebtoken'
 import {makeExecutableSchema} from "@graphql-tools/schema";
-import {ApolloServerPluginDrainHttpServer} from "@apollo/server/src/plugin/drainHttpServer/index.js";
+import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
 import {expressMiddleware} from "@apollo/server/express4";
 import {WebSocketServer} from "ws";
 import {useServer} from "graphql-ws/lib/use/ws";
+import typeDefs from "./schema.js";
+import resolvers from "./resolvers.js";
 
 mongoose.connect(config.mongodb_url)
     .then(() => {
