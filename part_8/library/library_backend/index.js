@@ -9,6 +9,8 @@ import jsonwebtoken from 'jsonwebtoken'
 import {makeExecutableSchema} from "@graphql-tools/schema";
 import {ApolloServerPluginDrainHttpServer} from "@apollo/server/src/plugin/drainHttpServer/index.js";
 import {expressMiddleware} from "@apollo/server/express4";
+import {WebSocketServer} from "ws";
+import {useServer} from "graphql-ws/lib/use/ws";
 
 mongoose.connect(config.mongodb_url)
     .then(() => {
@@ -112,9 +114,25 @@ const start = async () => {
     const app =  express()
     const httpServer = http.createServer(app)
 
+    const wsServer = new WebSocketServer({
+        server: httpServer,
+        path: '/'
+    })
+
+    const schema = makeExecutableSchema({typeDefs, resolvers})
+    const serverCleanup = useServer({schema}, wsServer)
+
     const server =  new ApolloServer({
-        schema: makeExecutableSchema({typeDefs, resolvers}),
-        plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
+        schema,
+        plugins: [ApolloServerPluginDrainHttpServer({httpServer}), {
+            async serverWillStart() {
+                return {
+                    async drainServer () {
+                        await serverCleanup.dispose();
+                    }
+                }
+            }
+        }]
     })
 
     await server.start()
