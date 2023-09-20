@@ -3,8 +3,8 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from "./components/LoginForm";
-import {useApolloClient, useQuery} from "@apollo/client";
-import {CURRENT_USER} from "./queries";
+import {useApolloClient, useQuery, useSubscription} from "@apollo/client";
+import {BOOK_ADDED, CURRENT_USER} from "./queries";
 import Recommendations from "./components/Recommendations";
 
 const App = () => {
@@ -12,6 +12,12 @@ const App = () => {
     const [token, setToken] = useState(null)
     const client = useApolloClient()
     const result = useQuery(CURRENT_USER)
+
+    useSubscription(BOOK_ADDED,{
+        onData: ({data}) => {
+            window.alert(`Added book: ${data.data.bookAdded.title}`)
+        }
+    })
 
     const logout = () => {
         setToken(null)
