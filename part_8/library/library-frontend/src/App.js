@@ -4,8 +4,9 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from "./components/LoginForm";
 import {useApolloClient, useQuery, useSubscription} from "@apollo/client";
-import {BOOK_ADDED, CURRENT_USER} from "./queries";
+import {ALL_BOOKS, BOOK_ADDED, CURRENT_USER} from "./queries";
 import Recommendations from "./components/Recommendations";
+import {updateCache} from "./utils";
 
 const App = () => {
     const [page, setPage] = useState('authors')
@@ -15,7 +16,9 @@ const App = () => {
 
     useSubscription(BOOK_ADDED,{
         onData: ({data}) => {
+            const addedBook = data.data.bookAdded
             window.alert(`Added book: ${data.data.bookAdded.title}`)
+            updateCache(client.cache, ALL_BOOKS, addedBook)
         }
     })
 
